@@ -95,56 +95,56 @@ public class ParticleFilteringEstimator {
 				// get value
 				short value = p.ParticleValue;
 
-//				// move particles
-//				if (p.MovingDirection == GameConstants.Up) { // up direction
-//
-//					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
-//						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
-//						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
-//						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//
-//				} else if (Particles[i].MovingDirection == GameConstants.Down) { // down direction
-//					
-//					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
-//						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
-//						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
-//						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//
-//				} else if (Particles[i].MovingDirection == GameConstants.Left) { // left direction
-//					
-//					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
-//						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
-//						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
-//						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//
-//				} else if (Particles[i].MovingDirection == GameConstants.Right) { // right direction
-//					
-//					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
-//						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
-//						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
-//						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
-//					}
-//
-//				}
+				// move particles
+				if (p.MovingDirection == GameConstants.Up) { // up direction
+
+					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
+						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
+						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
+						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+
+				} else if (Particles[i].MovingDirection == GameConstants.Down) { // down direction
+					
+					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
+						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
+						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
+						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+
+				} else if (Particles[i].MovingDirection == GameConstants.Left) { // left direction
+					
+					if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
+						Particles.Add (new Particle (GameConstants.Left, (short)(p.CurrentLocationX-1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
+						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
+						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
+					}
+
+				} else if (Particles[i].MovingDirection == GameConstants.Right) { // right direction
+					
+					if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
+						Particles.Add (new Particle (GameConstants.Right, (short)(p.CurrentLocationX+1), p.CurrentLocationY, value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
+						Particles.Add (new Particle (GameConstants.Up, p.CurrentLocationX, (short)(p.CurrentLocationY+1), value, GameConstants.ParticleLifeSpan, true));
+					}
+					if (canMoveDownOnMap && FloorcellPartcileCover.Contains(hashDown)) {
+						Particles.Add (new Particle (GameConstants.Down, p.CurrentLocationX, (short)(p.CurrentLocationY-1), value, GameConstants.ParticleLifeSpan, true));
+					}
+
+				}
 
 				// delete current particle
 				if (!justCreatedChanged) {

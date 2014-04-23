@@ -9,7 +9,7 @@ using System.IO;
 [System.Serializable]
 public class GameMap {
 	/* Contains 2D floor cells with type values (0, 2, 3, ????) */
-	public int[,] gameMapArray;
+	public static int[,] gameMapArray;
 
 	/* Contains distance each floor cell is to the exit (key: hash value of floor cell, value: distance to exit) */
 	public Dictionary<int, int> FloorCellToExitDistanceMap;
