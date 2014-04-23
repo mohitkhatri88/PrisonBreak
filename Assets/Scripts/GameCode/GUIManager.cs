@@ -2,13 +2,13 @@ using UnityEngine;
 using System.Collections;
 
 public class GUIManager : MonoBehaviour {
-
+	
 	public GUIText gameOverText, instructionsText, jumpsText;
-	int[,] map;
+	public int[,] map;
 	
 	// this seems pretty dodgy, although I guess if you know there is just one ... ugh
 	private static GUIManager instance;
-
+	
 	void Start () {
 		// perhaps should check here to make sure only one?
 		generateMap ();
@@ -19,7 +19,7 @@ public class GUIManager : MonoBehaviour {
 		instructionsText.enabled = true;
 		jumpsText.enabled = false;
 	}
-
+	
 	void Update () {
 		if(Input.GetButtonDown("Jump")){
 			GameEventManager.TriggerGameStart();
@@ -36,9 +36,10 @@ public class GUIManager : MonoBehaviour {
 		instructionsText.enabled = false;
 	}
 	private void generateMap(){
-		Map mapClass = new Map();
-		map = mapClass.getMap();
-
+		GameMap gameMap = new GameMap();
+		gameMap.CreateMap();
+		map = gameMap.GameMapArray;
+		
 		for(int i = 0; i < 100 ; i++){
 			for(int j = 0; j < 100; j++){
 				if(map[i,j] != 0 && map[i,j] != 4){
@@ -49,7 +50,7 @@ public class GUIManager : MonoBehaviour {
 				}
 			}
 		}
-
+		
 	}
 	private void GameStart () {
 		gameOverText.enabled = false;
@@ -58,7 +59,7 @@ public class GUIManager : MonoBehaviour {
 		jumpsText.enabled = true;
 		enabled = false;
 	}
-
+	
 	private void GameOver () {
 		gameOverText.enabled = true;
 		instructionsText.enabled = true;
