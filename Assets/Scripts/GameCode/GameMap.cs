@@ -65,8 +65,9 @@ public class GameMap {
 	 * 
 	 * TODO: does this need to return a long?
 	 */
-	public static int HashFloorCell(short locationX, short locationY) {
-		return 0;
+	public static ulong HashFloorCell(short locationX, short locationY) {
+		//Getting the hash value for the given location. 
+		return (locationX*37 + locationY*37*37);
 	}
 
 }
