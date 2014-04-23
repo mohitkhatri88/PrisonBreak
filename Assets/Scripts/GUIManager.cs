@@ -4,12 +4,14 @@ using System.Collections;
 public class GUIManager : MonoBehaviour {
 
 	public GUIText gameOverText, instructionsText, jumpsText;
+	int[,] map;
 	
 	// this seems pretty dodgy, although I guess if you know there is just one ... ugh
 	private static GUIManager instance;
 
 	void Start () {
 		// perhaps should check here to make sure only one?
+		generateMap ();
 		instance = this;
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
@@ -33,7 +35,22 @@ public class GUIManager : MonoBehaviour {
 		}
 		instructionsText.enabled = false;
 	}
-	
+	private void generateMap(){
+		Map mapClass = new Map();
+		map = mapClass.getMap();
+
+		for(int i = 0; i < 100 ; i++){
+			for(int j = 0; j < 100; j++){
+				if(map[i,j] != 0 && map[i,j] != 4){
+					GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+					cube.transform.localPosition = new Vector3(((j - 50f) + 0.5f) * 10, 25f, ((49f-i) + 0.5f) * 10);
+					//cube.transform.localPosition = new Vector3(((j - 50) + 0.5f) * 10f, 25f, ((49 - i) + 0.5f) * 10f);
+					cube.transform.localScale = new Vector3(10, 50, 10);
+				}
+			}
+		}
+
+	}
 	private void GameStart () {
 		gameOverText.enabled = false;
 		//instructionsText.enabled = false;
