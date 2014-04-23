@@ -4,6 +4,7 @@ using System.Collections;
 public class GUIManager : MonoBehaviour {
 	
 	public GUIText gameOverText, instructionsText, jumpsText;
+	public GameMap gameMap;
 	public int[,] map;
 	
 	// this seems pretty dodgy, although I guess if you know there is just one ... ugh
@@ -36,7 +37,7 @@ public class GUIManager : MonoBehaviour {
 		instructionsText.enabled = false;
 	}
 	private void generateMap(){
-		GameMap gameMap = new GameMap();
+		gameMap = new GameMap();
 		gameMap.CreateMap();
 		map = gameMap.GameMapArray;
 		

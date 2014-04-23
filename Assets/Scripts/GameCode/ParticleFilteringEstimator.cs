@@ -7,6 +7,9 @@ using System.Collections.Generic;
  * Represents all GuardAgents knowledge
  */
 public class ParticleFilteringEstimator {
+	/*Map*/
+	GameObject gui;
+	GameMap gameMap;
 	/* Particle */
 	public List<Particle> Particles { get; set; }
 
@@ -26,6 +29,8 @@ public class ParticleFilteringEstimator {
 		Particles = new List<Particle>();
 		FloorCellProbabilities = new short[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		FloorSensors = new List<int>();
+		gui = GameObject.Find("GUI");
+		gameMap = gui.GetComponent<GUIManager>().gameMap;
 	}
 
 	/*
@@ -37,11 +42,11 @@ public class ParticleFilteringEstimator {
 		// decrement particle locations
 		for (int x = 0; x<GameConstants.MapWidthPixels; x++) {
 			for (int y = 0; x<GameConstants.MapHeightPixels; y++) {
-//				if (GameMap.GameMapArray[x,y] == 0 || GameMap.GameMapArray[x,y] == 0) {
-//					if (FloorCellProbabilities[x,y] > 0) {
-//						FloorCellProbabilities[x,y] = (short)(FloorCellProbabilities[x,y] - 1);
-//					}
-//				}
+				if (gameMap.GameMapArray[x,y] == 0 || gameMap.GameMapArray[x,y] == 0) {
+					if (FloorCellProbabilities[x,y] > 0) {
+						FloorCellProbabilities[x,y] = (short)(FloorCellProbabilities[x,y] - 1);
+					}
+				}
 			}
 		}
 
@@ -74,17 +79,17 @@ public class ParticleFilteringEstimator {
 
 
 				// TODO: use floor cell types
-//				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0 
-//					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0;
-//
-//				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0 
-//					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0;
-//
-//				bool canMoveLeftOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0 
-//					|| GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0;
-//
-//				bool canMoveRightOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0 
-//					|| GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0;
+				bool canMoveUpOnMap = gameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0 
+					|| gameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0;
+
+				bool canMoveDownOnMap = gameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0 
+					|| gameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0;
+
+				bool canMoveLeftOnMap = gameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0 
+					|| gameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0;
+
+				bool canMoveRightOnMap = gameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0 
+					|| gameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0;
 
 
 				// get value
