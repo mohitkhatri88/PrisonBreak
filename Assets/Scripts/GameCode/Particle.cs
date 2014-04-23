@@ -19,4 +19,19 @@ public class Particle {
 
 	/* Number of game steps until partile dies */
 	public short TimeToLive { get; set; }
+
+	/* Checks whether particle was created during current game step */
+	public bool JustCreated { get; set; }
+
+	public Particle(short MovingDirection, short CurrentLocationX, short CurrentLocationY,
+	                short ParticleValue, short TimeToLive, bool JustCreated){
+
+		this.MovingDirection = MovingDirection;
+		this.CurrentLocationX = CurrentLocationX;
+		this.CurrentLocationY = CurrentLocationY;
+		this.ParticleValue = ParticleValue;
+		this.TimeToLive = TimeToLive;
+		this.JustCreated = JustCreated;
+	}
+
 }

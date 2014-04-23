@@ -6,7 +6,8 @@ using System.Collections.Generic;
 /*
  * Represents Guards that chase PlayerAgent
  */
-class GuardAgent : GameAgent {
-	// speeds
+public class GuardAgent : GameAgent {
+	// TODO: add speeds
+
 }
 

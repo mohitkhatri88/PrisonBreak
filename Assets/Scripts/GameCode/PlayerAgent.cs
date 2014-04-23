@@ -5,7 +5,7 @@ using System;
 /*
  * Represents user 
  */
-class PlayerAgent : GameAgent {
+public class PlayerAgent : GameAgent {
 
 }
 

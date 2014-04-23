@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /*
  * Represent rats which can walk onto floor sensors and create noise in the GaurdAgents knowledge
  */
-class RatAgent : GameAgent {
+public class RatAgent : GameAgent {
 
 }
 

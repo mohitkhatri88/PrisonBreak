@@ -7,21 +7,17 @@ using System.Collections.Generic;
  */
 public class GameMap {
 	/* Contains 2D floor cells with type values (0, 2, 3, ????) */
-	public byte[] GameMapArray { get; set; }
+	public static byte[,] GameMapArray { get; set; }
 
 	/* Contains distance each floor cell is to the exit (key: hash value of floor cell, value: distance to exit) */
 	public Dictionary<int, int> FloorCellToExitDistanceMap;
-
-	/* Contains GameMap positions that contain floor sensors (hash value of floor cell)   */
-	List<int> FloorSensors;
 
 	/*
 	 * Constructor
 	 */
 	public GameMap () {
-		GameMapArray = new byte[GameConstants.SizeOfMapArrayPixels];
+		GameMapArray = new byte[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		FloorCellToExitDistanceMap = new Dictionary<int, int>();
-		FloorSensors = new List<int>();
 	}
 
 	/*
@@ -39,8 +35,10 @@ public class GameMap {
 
 	/*
 	 * Creates unique value for floor cell
+	 * 
+	 * TODO: does this need to return a long?
 	 */
-	public int HashFloorCell(short locationX, short locationY) {
+	public static int HashFloorCell(short locationX, short locationY) {
 		return 0;
 	}
 

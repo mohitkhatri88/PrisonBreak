@@ -52,4 +52,15 @@ public class GameConstants {
 
 	/* Height of 2D GameMap turning floor cell */
 	public const short TurningFloorCellHeightPixels = 7;
+
+	/* Initial number of time stemps for particle to live */
+	public const short ParticleLifeSpan = 100;
+
+	/* Particle value when RatAgent steps on floor sensor */
+	public const short RatAgentParticleValue = 25;
+
+	/* IParticle value when PlayerAgent steps on floor sensor */
+	public const short PlayerAgentParticleValue = 50;
+
+	// TODO: add constants for floor cell types (e.g. 0 = floor, 1 = call)
 }
