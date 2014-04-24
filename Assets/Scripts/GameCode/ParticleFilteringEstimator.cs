@@ -14,7 +14,7 @@ public class ParticleFilteringEstimator {
 	public short[,] FloorCellProbabilities { get; set; }
 
 	/* Contains GameMap positions that contain floor sensors (hash value of floor cell)   */
-	List<int> FloorSensors;
+	List<ulong> FloorSensors;
 
 	/* Contains GameMap positions that a respective particle have covered (key: hash of particle number, locationX, and locationY)  */
 	List<long> FloorcellPartcileCover;
@@ -25,7 +25,7 @@ public class ParticleFilteringEstimator {
 	public ParticleFilteringEstimator () {
 		Particles = new List<Particle>();
 		FloorCellProbabilities = new short[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
-		FloorSensors = new List<int>();
+		FloorSensors = new List<ulong>();
 	}
 
 	/*
@@ -164,7 +164,7 @@ public class ParticleFilteringEstimator {
 	 * Returns true if floor sensor did not exist prior otherwise returns true
 	 */	
 	public bool AddFloorSensor(short locationX, short locationY){
-		int hash = GameMap.HashFloorCell (locationX, locationY);
+		ulong hash = GameMap.HashFloorCell (locationX, locationY);
 		if (!FloorSensors.Contains(hash)) {
 			FloorSensors.Add(hash);
 			return true;
@@ -180,7 +180,7 @@ public class ParticleFilteringEstimator {
 	 * locationY - y coordinate of where to check for floor sensor
 	 */	
 	public bool IsFloorSensorAtLocation(short locationX, short locationY){
-		int hash = GameMap.HashFloorCell (locationX, locationY);
+		ulong hash = GameMap.HashFloorCell (locationX, locationY);
 		if (FloorSensors.Contains(hash)) {
 			return true;
 		}
