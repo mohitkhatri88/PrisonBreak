@@ -65,7 +65,7 @@ public class GameConstants {
 	// TODO: add constants for floor cell types (e.g. 0 = floor, 1 = call)
 	public const short MapFloor = 0;
 	public const short MapWall = 1;
-	public const short TurningCell = 4;
-	public const short EntranceCell = 3;
-	//public const short 
+	public const short MapExit = 2;
+	public const short MapPrinsonCell = 3;
+	public const short MapTurningCell = 4;
 }
