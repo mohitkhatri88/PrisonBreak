@@ -18,20 +18,39 @@ public class ReinforcementLearner {
 	/* Ones represent floor cells Agent has walked on */
 	public byte[] CellmateExploredMap { get; set; }
 
+	/*A map sized turningfloor cell probabilities. */
+	public TurningFloorCell[,] CellMap { get; set; }
+
+	/*variable to keep the value for the epsilon.*/
+	public double epsilon;
+
+	/*Short value to set the learning rate.*/
+	public double learningRate;
 	/*
 	 * ReinforcementLearner constructor 
 	 */
 	public ReinforcementLearner () {
 		TurningFloorCellMap = new Dictionary<int, TurningFloorCell>();
 		CellmateExploredMap = new byte[GameConstants.SizeOfMapArrayPixels];
+		CellMap = new TurningFloorCell[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
+		epsilon = 0.9;
 	}
 
 	/*
 	 * Updates Agents knowledge of the environment
 	 */
-	public void UpdateLearner() {
-		// Update turning floor cell probabilities (dead ends, distances, loops, coins) 
+	public short UpdateLearner() {
+		//Get the best action from the available actions for the given state. 
+		short nextDirection = GetNextDirection ();
+		// Get the next state based on the direction. 
+
 		// Last floor cell and direction taken
 		// Store explored map (cellmate known map)
+		return nextDirection;
+	}
+
+	public short GetNextDirection() {
+		//Compare the values for the current location of the cellmate. I assume this comes from the cellmate agent class. 
+		return GameConstants.Left;
 	}
 }
