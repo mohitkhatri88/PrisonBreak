@@ -6,6 +6,6 @@ using System;
  * Represents Guard Agent. Guards chase Player Agent.
  */
 public class CellmateAgent : GameAgent {
-
+	public bool Respawned { get; set; }
 }
 
