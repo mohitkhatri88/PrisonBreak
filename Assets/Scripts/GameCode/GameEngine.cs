@@ -6,36 +6,36 @@ using System.Collections.Generic;
 /*
  * Controls global game state
  */
-public class GameEngine {
+public static class GameEngine {
 	// time game started
-	DateTime gameStartTime = new DateTime();
+	static DateTime gameStartTime = new DateTime();
 
 	// agents
-	PlayerAgent player = new PlayerAgent();
-	CellmateAgent cellmate = new CellmateAgent();
-	List<GuardAgent> guards = new List<GuardAgent>();
-	List<RatAgent> rats = new List<RatAgent>();
+	static PlayerAgent player = new PlayerAgent();
+	static CellmateAgent cellmate = new CellmateAgent();
+	static List<GuardAgent> guards = new List<GuardAgent>();
+	static List<RatAgent> rats = new List<RatAgent>();
 
-	List<Coin> coins = new List<Coin>();
-	public short RemainingCellmateLives { get; set; }
-	public short RemainingSpeedBoostSeconds { get; set; }
-	public short GuardsAvoided  { get; set; }
-	public short NumberOfPlayerDeaths { get; set; }
-	public short NumberOfgamesPlayed  { get; set; }
+	static List<Coin> coins = new List<Coin>();
+	public static short RemainingCellmateLives { get; set; }
+	public static short RemainingSpeedBoostSeconds { get; set; }
+	public static short GuardsAvoided  { get; set; }
+	public static short NumberOfPlayerDeaths { get; set; }
+	public static short NumberOfgamesPlayed  { get; set; }
 
 	// pcg values
-	public short NumberOfPrisonCells_PCG { get; set; }
-	public short NumberOfOpenPrisonCells_PCG { get; set; }
-	public short NumberOfCoins_PCG { get; set; }
-	public short NumberOfCoinsRequiredToWin_PCG { get; set; }
-	public short PlayerPixelDistanceFromExit_PCG { get; set; }
-	public short NumberOfCellmateLives_PCG { get; set; }
-	public short NumberOfGuards_PCG { get; set; }
-	public short SpeedBoostSeconds_PCG { get; set; }
-	public short NumberOfFloorSensors_PCG { get; set; }
-	public short NumberOfRats_PCG { get; set; }
+	public static short NumberOfPrisonCells_PCG { get; set; }
+	public static short NumberOfOpenPrisonCells_PCG { get; set; }
+	public static short NumberOfCoins_PCG { get; set; }
+	public static short NumberOfCoinsRequiredToWin_PCG { get; set; }
+	public static short PlayerPixelDistanceFromExit_PCG { get; set; }
+	public static short NumberOfCellmateLives_PCG { get; set; }
+	public static short NumberOfGuards_PCG { get; set; }
+	public static short SpeedBoostSeconds_PCG { get; set; }
+	public static short NumberOfFloorSensors_PCG { get; set; }
+	public static short NumberOfRats_PCG { get; set; }
 
-	public void InitGame() {
+	public static void InitGame() {
 		// Initialize PCG Values from the stored values in global info 
 		// Create map (map arrays)
 		// Create agents
@@ -43,20 +43,24 @@ public class GameEngine {
 		// start game by calling RunGame()
 	}
 
-	public void RunGame() {
+	public static void setPlayerPosition() {
+		//player.LocationX;
+		//player.LocationY;
+	}
+	public static void RunGame() {
 		// update game enviornment by calling UpdateGameEnvironment()
 		// show game visually by calling ShowGame()
 		// call EndGame() when game is over
 	}
 
-	private void UpdateGameEnvironment () {
+	private static void UpdateGameEnvironment () {
 		// Update agents locations
 	    // Update time, coins, and distance traveled
 		// Update numberOfGuardsAvoided
 	    // Update numberOfPlayerDeaths
 	}
 
-	private void EndGame() {
+	private static void EndGame() {
 		// update PCG values by using end game state
 
 		/*  end game state:

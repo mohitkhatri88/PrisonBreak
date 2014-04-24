@@ -5,7 +5,7 @@ using System;
 /*
  * Represents Guard Agent. Guards chase Player Agent.
  */
-public class CellmateAgent : MonoBehaviour {
+public class CellmateAgent : GameAgent {
 
 }
 

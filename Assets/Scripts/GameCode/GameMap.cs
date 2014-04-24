@@ -7,25 +7,19 @@ using System.IO;
  * Represents 2D game map
  */
 [System.Serializable]
-public class GameMap {
+public static class GameMap {
 	/* Contains 2D floor cells with type values (0, 2, 3, ????) */
-	public static int[,] gameMapArray;
+	public static short[,] GameMapArray;
 
 	/* Contains distance each floor cell is to the exit (key: hash value of floor cell, value: distance to exit) */
-	public Dictionary<int, int> FloorCellToExitDistanceMap;
-
-	/*
-	 * Constructor
-	 */
-	public GameMap () {
-		gameMapArray = new int[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
-		FloorCellToExitDistanceMap = new Dictionary<int, int>();
-	}
+	public static Dictionary<int, int> FloorCellToExitDistanceMap;
 
 	/*
 	 * Creates map info
 	 */
-	public void CreateMap() {
+	public static void CreateMap() {
+		GameMapArray = new short[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
+		FloorCellToExitDistanceMap = new Dictionary<int, int>();
 		// Map size (dimensions) - GameConstants class
 		// Floor cell size (dimensions) - GameConstants class
 		// Generate unity 3D map (coins, prison cells, floor, walls, start, and exit)
@@ -41,7 +35,7 @@ public class GameMap {
 			Debug.Log (source.Length);
 			while(source != null){
 				for(int j = 0; j < source.Length; j++){
-					gameMapArray[index,j] = (int)char.GetNumericValue(source[j]);
+					GameMapArray[index,j] = (short)char.GetNumericValue(source[j]);
 				}
 				index++;
 				source = sr.ReadLine();
@@ -49,14 +43,6 @@ public class GameMap {
 		}catch(System.Exception ee){
 			Debug.Log("Exception");
 			return;
-		}
-	}
-	public int[,] GameMapArray{
-		get{
-			return gameMapArray;
-		}
-		set{
-			gameMapArray = value;
 		}
 	}
 

@@ -63,4 +63,9 @@ public class GameConstants {
 	public const short PlayerAgentParticleValue = 50;
 
 	// TODO: add constants for floor cell types (e.g. 0 = floor, 1 = call)
+	public const short MapFloor = 0;
+	public const short MapWall = 1;
+	public const short TurningCell = 4;
+	public const short EntranceCell = 3;
+	//public const short 
 }
