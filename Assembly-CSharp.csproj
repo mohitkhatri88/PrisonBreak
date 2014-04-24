@@ -64,6 +64,8 @@
      <Compile Include="Assets\Scripts\UI Code\AvatarScript.cs" />
      <Compile Include="Assets\Scripts\UI Code\GUIManager.cs" />
      <Compile Include="Assets\Scripts\UI Code\GameEventManager.cs" />
+     <Compile Include="Assets\Scripts\UI Code\GuardScript.cs" />
+     <Compile Include="Assets\Scripts\UI Code\MiniMapGuard.cs" />
      <Compile Include="Assets\Scripts\UI Code\MiniMapPlayer.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
