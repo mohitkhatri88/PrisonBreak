@@ -36,6 +36,11 @@ public static class GameEngine {
 	public static short NumberOfRats_PCG { get; set; }
 
 
+	// pcg helper values
+	public static short AvgNumberOfCoinsPlaced { get; set; }
+	public static short AvgNumberOfCoinsCollected { get; set; }
+
+
 	// AI
 	public static ParticleFilteringEstimator estimator = new ParticleFilteringEstimator();
 	public static ReinforcementLearner learner = new ReinforcementLearner();
@@ -167,10 +172,6 @@ public static class GameEngine {
 		// TODO: add here
 	}
 
-	public static void CalculatePCGValues() {
-		//
-	}
-
 	public static void setPlayerPosition(short locationX, short locationY) {
 		player.LocationX = locationX;
 		player.LocationY = locationY;
@@ -225,36 +226,36 @@ public static class GameEngine {
 
 
 			bool locationSet = false;
-			if (distanceUp > distanceDown && distanceUp > distanceLeft && distanceUp > distanceRight) { // up
+			if (distanceUp < distanceDown && distanceUp < distanceLeft && distanceUp < distanceRight) { // up
 				if (canGoUp) {
 					guards[i].LocationY += 1;
 					locationSet = true;
 				} else {
-					distanceUp = -1;
+					distanceUp = (short)(32000);
 				}
 
-			} else if (distanceDown > distanceUp && distanceDown > distanceLeft && distanceDown > distanceRight) { // down
+			} else if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight) { // down
 				if (canGoDown) {
 					guards[i].LocationY -= 1;
 					locationSet = true;
 				} else {
-					distanceDown = -1;
+					distanceDown = (short)(32000);
 				}
 
-			} else if (distanceLeft > distanceUp && distanceLeft > distanceDown && distanceLeft > distanceRight) { // left
+			} else if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight) { // left
 				if (canGoLeft) {
 					guards[i].LocationX -= 1;
 					locationSet = true;
 				} else {
-					distanceLeft = -1;
+					distanceLeft = (short)(32000);
 				}
 
-			} else if (distanceRight > distanceUp && distanceRight > distanceDown && distanceRight > distanceLeft) { // right
+			} else if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft) { // right
 				if (canGoRight) {
-					guards[i].LocationX -= 1;
+					guards[i].LocationX += 1;
 					locationSet = true;
 				} else {
-					distanceRight = -1;
+					distanceRight = (short)(32000);
 				}
 
 			}
@@ -336,11 +337,85 @@ public static class GameEngine {
 		}
 
 
-		// TODO: check if Player won
+		// TODO: check if Player won - is this correct?
+		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.EntranceCell) {
+			return false;
+		}
+
 		return true;
 	}
 
 	private static void EndGame() {
+		// increment number of games played
+		++NumberOfgamesPlayed;
+		
+		// check if player died
+		if (player.Alive==0) {
+			++NumberOfPlayerDeaths;
+		}
+
+		NumberOfPrisonCells_PCG = 21;
+		NumberOfOpenPrisonCells_PCG = 21;
+		NumberOfCoins_PCG = 493;  // 10% of walkable floor cells
+		NumberOfCoinsRequiredToWin_PCG = 49; // 10% of coins placed
+		PlayerPixelStartDistanceFromExit_PCG = 50; // start off halfway
+		NumberOfInitialCellmateLives_PCG = 3;
+		NumberOfGuards_PCG = 26; // 1 for each turning cell
+		SpeedBoostSeconds_PCG = 10;
+		NumberOfFloorSensors_PCG  = 493; // 10% of walkable floor cells
+		NumberOfRats_PCG = 26; // 1 for each guard 
+
+		// set number of prison cells open
+		NumberOfOpenPrisonCells_PCG = (short)(NumberOfOpenPrisonCells_PCG + (0));
+		if (NumberOfOpenPrisonCells_PCG > NumberOfPrisonCells_PCG) {
+			NumberOfOpenPrisonCells_PCG = NumberOfPrisonCells_PCG;
+		} else if (NumberOfOpenPrisonCells_PCG < 5) {
+			NumberOfOpenPrisonCells_PCG = 5;
+		}
+
+		// set number of coins placed
+		short numberOfCoinsCollected = 0;
+		for (int i = 0; i<coins.Count; i++) {
+			if (coins[i].Collected == true) {
+				++numberOfCoinsCollected;
+			}
+		}
+
+		AvgNumberOfCoinsCollected = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + numberOfCoinsCollected)/(NumberOfgamesPlayed));
+		AvgNumberOfCoinsPlaced = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + coins.Count)/(NumberOfgamesPlayed));
+		NumberOfCoins_PCG = (short)((AvgNumberOfCoinsCollected / AvgNumberOfCoinsPlaced) * GameConstants.NumberOfHallwayFloorTiles);
+		NumberOfCoinsRequiredToWin_PCG = (short)(NumberOfCoins_PCG*.75);
+
+		// set distance from exit
+		short dieWinDiff = (short)(NumberOfgamesPlayed-NumberOfPlayerDeaths);
+		if (dieWinDiff < (short)0) {
+			PlayerPixelStartDistanceFromExit_PCG = (short)(50-(10*dieWinDiff));
+		} else {
+			PlayerPixelStartDistanceFromExit_PCG = (short)(50+(10*dieWinDiff));
+		}
+
+
+		// TODO: set number of cellmate lives
+
+		//TODO: set number of guards
+
+		// TODO: set amount of speed boost
+
+		// TODO: set number of floor sensors
+
+		// TODO: set number of rats
+
+
+
+
+
+
+
+		// reset all values
+		// TODO: clear values
+		InitGame ();
+
+
 		// update PCG values by using end game state
 
 		// increment number of games played

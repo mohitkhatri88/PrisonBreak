@@ -71,4 +71,5 @@ public class GameConstants {
 	public const short EntranceCell = 3;
 
 	public const short GuardStartDistanceFromPlayer = 20;
+	public const short NumberOfHallwayFloorTiles = 4930;
 }
