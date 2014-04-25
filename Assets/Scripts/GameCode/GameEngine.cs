@@ -29,7 +29,7 @@ public static class GameEngine {
 	public static short NumberOfCoins_PCG { get; set; }
 	public static short NumberOfCoinsRequiredToWin_PCG { get; set; }
 	public static short PlayerPixelStartDistanceFromExit_PCG { get; set; }
-	public static short NumberOfInitialCellmateLives_PCG { get; set; }
+	public static short NumberOfCellmateLives_PCG { get; set; }
 	public static short NumberOfGuards_PCG { get; set; }
 	public static short SpeedBoostSeconds_PCG { get; set; }
 	public static short NumberOfFloorSensors_PCG { get; set; }
@@ -39,6 +39,8 @@ public static class GameEngine {
 	// pcg helper values
 	public static short AvgNumberOfCoinsPlaced { get; set; }
 	public static short AvgNumberOfCoinsCollected { get; set; }
+	public static short TotalTimesPlayerInPrisonCell  { get; set; }
+	public static bool PlayerPrevInPrisonCell { get; set; }
 
 
 	// AI
@@ -47,6 +49,11 @@ public static class GameEngine {
 
 
 	public static void InitGame() {
+		// start timer
+		GameStartTime = DateTime.Now;
+		RemainingCellmateLives = NumberOfCellmateLives_PCG;
+		RemainingSpeedBoostSeconds = SpeedBoostSeconds_PCG;
+
 		// initial PCG values
 		if (NumberOfgamesPlayed==0) {
 			NumberOfPrisonCells_PCG = 21;
@@ -54,7 +61,7 @@ public static class GameEngine {
 			NumberOfCoins_PCG = 493;  // 10% of walkable floor cells
 			NumberOfCoinsRequiredToWin_PCG = 49; // 10% of coins placed
 			PlayerPixelStartDistanceFromExit_PCG = 50; // start off halfway
-			NumberOfInitialCellmateLives_PCG = 3;
+			NumberOfCellmateLives_PCG = 3;
 			NumberOfGuards_PCG = 26; // 1 for each turning cell
 			SpeedBoostSeconds_PCG = 10;
 			NumberOfFloorSensors_PCG  = 493; // 10% of walkable floor cells
@@ -118,7 +125,7 @@ public static class GameEngine {
 		// set cellmate
 		cellmate.LocationX = player.LocationX;
 		cellmate.LocationY = player.LocationY;
-		cellmate.AgentId = GameConstants.RatAgentId;
+		cellmate.AgentId = GameConstants.CellmateAgentId;
 		cellmate.Alive = 1;
 		cellmate.MovingDirection = (short)random.Next (0,4);
 
@@ -168,8 +175,23 @@ public static class GameEngine {
 			rats.Add(rat);			
 		}
 
+
 		// add floor sensors
-		// TODO: add here
+		short numberOfFloorSensorsPlace = 0;
+		while (numberOfFloorSensorsPlace < NumberOfFloorSensors_PCG) {
+			short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
+			short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
+
+			// TODO: prison floor cell may need to be different number to avoid placing agents in prison cell
+			if (GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapFloor) {
+				++numberOfFloorSensorsPlace;
+				estimator.AddFloorSensor(xCoord, yCoord);
+			}
+		}
+
+
+		// TODO: check if player is in prison cell (increment NumberOfTimesPlayerEnteredPrisonCells)
+		// toggle PlayerPrevInPrisonCell
 	}
 
 	public static void setPlayerPosition(short locationX, short locationY) {
@@ -195,12 +217,8 @@ public static class GameEngine {
 		// lowest distance Player is to Guard
 		short lowestPlayeristanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
 
-		// update cellmate
+		// update cellmate (location updated in reinforcement leaner)
 		short lowestCellmateDistanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
-		short[] newCellMatePositionWithDirection = learner.GetNextLocationWithDirection (cellmate.LocationX, cellmate.LocationY);
-		cellmate.LocationX = newCellMatePositionWithDirection [0];
-		cellmate.LocationY = newCellMatePositionWithDirection [1];
-		cellmate.MovingDirection = newCellMatePositionWithDirection [2];
 
 
 		// update guards
@@ -313,6 +331,7 @@ public static class GameEngine {
 					break;
 			}
 
+			// check if rat is on floor sensor
 			if (estimator.IsFloorSensorAtLocation(rats[i].LocationX, rats[i].LocationY)) {
 				estimator.CreateParticle(GameConstants.RatAgentId, rats[i].LocationX, rats[i].LocationY);
 			}
@@ -345,28 +364,21 @@ public static class GameEngine {
 		return true;
 	}
 
-	private static void EndGame() {
+	/*
+	 * isGameWin - whether or not player won game
+	 */
+	private static void EndGame(bool isGameWin) {
 		// increment number of games played
 		++NumberOfgamesPlayed;
 		
 		// check if player died
-		if (player.Alive==0) {
+		if (!isGameWin) {
 			++NumberOfPlayerDeaths;
 		}
 
-		NumberOfPrisonCells_PCG = 21;
-		NumberOfOpenPrisonCells_PCG = 21;
-		NumberOfCoins_PCG = 493;  // 10% of walkable floor cells
-		NumberOfCoinsRequiredToWin_PCG = 49; // 10% of coins placed
-		PlayerPixelStartDistanceFromExit_PCG = 50; // start off halfway
-		NumberOfInitialCellmateLives_PCG = 3;
-		NumberOfGuards_PCG = 26; // 1 for each turning cell
-		SpeedBoostSeconds_PCG = 10;
-		NumberOfFloorSensors_PCG  = 493; // 10% of walkable floor cells
-		NumberOfRats_PCG = 26; // 1 for each guard 
 
 		// set number of prison cells open
-		NumberOfOpenPrisonCells_PCG = (short)(NumberOfOpenPrisonCells_PCG + (0));
+		NumberOfOpenPrisonCells_PCG = (short)(NumberOfPrisonCells_PCG * (TotalTimesPlayerInPrisonCell/(NumberOfPrisonCells_PCG*NumberOfgamesPlayed)));
 		if (NumberOfOpenPrisonCells_PCG > NumberOfPrisonCells_PCG) {
 			NumberOfOpenPrisonCells_PCG = NumberOfPrisonCells_PCG;
 		} else if (NumberOfOpenPrisonCells_PCG < 5) {
@@ -386,6 +398,7 @@ public static class GameEngine {
 		NumberOfCoins_PCG = (short)((AvgNumberOfCoinsCollected / AvgNumberOfCoinsPlaced) * GameConstants.NumberOfHallwayFloorTiles);
 		NumberOfCoinsRequiredToWin_PCG = (short)(NumberOfCoins_PCG*.75);
 
+		// TODO: use game time somehow
 		// set distance from exit
 		short dieWinDiff = (short)(NumberOfgamesPlayed-NumberOfPlayerDeaths);
 		if (dieWinDiff < (short)0) {
@@ -394,57 +407,52 @@ public static class GameEngine {
 			PlayerPixelStartDistanceFromExit_PCG = (short)(50+(10*dieWinDiff));
 		}
 
+		// TODO: how do we use Percentage of cellmate route explored?
+		// set number of cellmate lives
+		if (isGameWin) {
+			NumberOfCellmateLives_PCG -= (short)1;
+		} else {
+			NumberOfCellmateLives_PCG += (short)1;
+		}
 
-		// TODO: set number of cellmate lives
+		// set number of guards
+		if (isGameWin) {
+			NumberOfGuards_PCG -= (short)5;
+		} else {
+			NumberOfGuards_PCG += (short)5;
+		}
 
-		//TODO: set number of guards
+		// set amount of speed boost
+		if (isGameWin) {
+			SpeedBoostSeconds_PCG += (short)3;
+		} else {
+			SpeedBoostSeconds_PCG -= (short)3;
+		}
 
-		// TODO: set amount of speed boost
+		// set number of floor sensors
+		if (isGameWin) {
+			NumberOfFloorSensors_PCG += (short)(NumberOfFloorSensors_PCG*.15);
+		} else {
+			NumberOfFloorSensors_PCG -= (short)(NumberOfFloorSensors_PCG*.15);
+		}
 
-		// TODO: set number of floor sensors
+		// set number of rats
+		if (isGameWin) {
+			NumberOfRats_PCG += (short)(NumberOfRats_PCG*.05);
+		} else {
+			NumberOfRats_PCG += (short)(NumberOfRats_PCG*.05);
+		}
 
-		// TODO: set number of rats
+		
+		// reset agents and coins
+		player = new PlayerAgent();
+	    cellmate = new CellmateAgent();
+		guards = new List<GuardAgent>();
+		rats = new List<RatAgent>();		
+		coins = new List<Coin>();
 
 
-
-
-
-
-
-		// reset all values
-		// TODO: clear values
+		// init new game
 		InitGame ();
-
-
-		// update PCG values by using end game state
-
-		// increment number of games played
-		// check time played
-		// increment death or win
-		// reset all values
-
-		/*  end game state:
-		        Distance travelled at time of death
-			    Coins collected
-				Number of guards avoided
-				Percentage of cellmate route explored
-				Percentage of speed boost used
-				Number of times died (maybe give player three lives)
-				Time spent playing
-        */
-
-		/*  calculated pcg values:
-				Number of Guards placed
-				Starting position distance from exit
-				Reinforcement learning rate
-				Number of open prison cells
-				Amount of time Player can speed boost
-				Number of rats and floor sensors
-        */
-
-		// CalculatePCGValues ();
-
-		// Call init again
-
 	}
 }

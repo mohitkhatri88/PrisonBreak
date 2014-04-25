@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\GameCode\FootstepSensor.cs" />
      <Compile Include="Assets\Scripts\GameCode\GameAgent.cs" />
      <Compile Include="Assets\Scripts\GameCode\GameConstants.cs" />
+     <Compile Include="Assets\Scripts\GameCode\GameDebugger.cs" />
      <Compile Include="Assets\Scripts\GameCode\GameEngine.cs" />
      <Compile Include="Assets\Scripts\GameCode\GameMap.cs" />
      <Compile Include="Assets\Scripts\GameCode\GuardAgent.cs" />

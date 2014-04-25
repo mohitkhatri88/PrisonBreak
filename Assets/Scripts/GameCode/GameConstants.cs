@@ -72,4 +72,10 @@ public class GameConstants {
 
 	public const short GuardStartDistanceFromPlayer = 20;
 	public const short NumberOfHallwayFloorTiles = 4930;
+
+	/* Number of game steps to skip before printing GameDebugger */
+	public const short GameDebuggerGameSteps = 5;
+
+	/* Turns GameDebugger on and off */
+	public const bool GameDebuggerOn = false;
 }
