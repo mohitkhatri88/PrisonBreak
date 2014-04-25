@@ -11,12 +11,12 @@ public static class GameEngine {
 	static DateTime GameStartTime = DateTime.Now;
 
 	// agents
-	static PlayerAgent player = new PlayerAgent();
-	static CellmateAgent cellmate = new CellmateAgent();
-	static List<GuardAgent> guards = new List<GuardAgent>();
-	static List<RatAgent> rats = new List<RatAgent>();
+	public static PlayerAgent player = new PlayerAgent();
+	public static CellmateAgent cellmate = new CellmateAgent();
+	public static List<GuardAgent> guards = new List<GuardAgent>();
+	public static List<RatAgent> rats = new List<RatAgent>();
 
-	static List<Coin> coins = new List<Coin>();
+	public static List<Coin> coins = new List<Coin>();
 	public static short RemainingCellmateLives { get; set; }
 	public static short RemainingSpeedBoostSeconds { get; set; }
 	public static short GuardsAvoided  { get; set; }
@@ -135,6 +135,19 @@ public static class GameEngine {
 			guard.AgentId = GameConstants.GuardAgentId;
 			guard.Alive = 1;
 			guard.MovingDirection = (short)random.Next (0,4);
+
+			switch (random.Next(0,4)) {
+				case 0:
+					guard.Speed = GameConstants.GuardSpeedMedium;
+					break;
+				case 1:
+					guard.Speed = GameConstants.GuardSpeedFast;
+					break;
+				case 2:
+					guard.Speed = GameConstants.GuardSpeedSlow;
+					break;
+			}
+
 
 			bool guardPosFound = false;
 			while (!guardPosFound) {
@@ -406,7 +419,7 @@ public static class GameEngine {
 
 		// TODO: use game time somehow
 		// set distance from exit
-		short dieWinDiff = (short)(NumberOfgamesPlayed-NumberOfPlayerDeaths);
+		short dieWinDiff = (short)((NumberOfgamesPlayed/2)-NumberOfPlayerDeaths);
 		if (dieWinDiff < (short)0) {
 			PlayerPixelStartDistanceFromExit_PCG = (short)(50-(10*dieWinDiff));
 		} else {

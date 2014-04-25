@@ -93,4 +93,19 @@ public class GameConstants {
 
 	/* Turns GameDebugger on and off */
 	public const bool GameDebuggerOn = false;
+
+	/* GuardAgent is same speed as PlayerAgent */
+	public const short GuardSpeedMedium = 0;
+
+	/* GuardAgent speed is faster than PlayerAgent */
+	public const short GuardSpeedFast = 1;
+
+	/* GuardAgent speed is slower than PlayerAgent */
+	public const short GuardSpeedSlow = -1;
+
+	/*  starting range to listen for footsteps behind PlayerAgent */
+	public const short FootstepSensorBehindPixels = 10;
+
+	/*  starting range to listen for footsteps in front of PlayerAgent */
+	public const short FootstepSensorFrontPixels = 10;	
 }

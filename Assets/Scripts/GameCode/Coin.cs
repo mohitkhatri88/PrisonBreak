@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /*
  * Represents a Coin that a PlayerAgent can collect
  */
-class Coin {
+public class Coin {
 	/* x coordinate in GameMap GameMapArray */
 	public short LocationX { get; set; }
 
