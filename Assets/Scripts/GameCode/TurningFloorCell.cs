@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /*
  * Represents floor cells in prison that agents can turn on
  */
-class TurningFloorCell {
+public class TurningFloorCell {
 	/* probability of agent taking left corner */
 	public short LeftCornerProbability { get; set; }
 
