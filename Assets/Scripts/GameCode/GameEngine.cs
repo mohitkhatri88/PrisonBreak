@@ -22,6 +22,7 @@ public static class GameEngine {
 	public static short GuardsAvoided  { get; set; }
 	public static short NumberOfPlayerDeaths { get; set; }
 	public static short NumberOfgamesPlayed  { get; set; }
+	public static short NumberOfCoinsCollected { get; set; }
 
 	// pcg values
 	public static short NumberOfPrisonCells_PCG { get; set; }
@@ -368,6 +369,15 @@ public static class GameEngine {
 			estimator.CreateParticle(GameConstants.PlayerAgentId, player.LocationX, player.LocationY);
 		}
 
+		// check if Player collected a coin
+		for (int j = 0; j<coins.Count; j++) {
+			if (Math.Abs (coins[j].LocationX-player.LocationX) < 2 && Math.Abs (coins[j].LocationY-player.LocationY) < 2) {
+				coins[j].Collected = true;
+				++NumberOfCoinsCollected;
+			}
+		}
+
+
 		// check if Player is caught by Guard
 		if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			player.Alive = 0;
@@ -405,14 +415,7 @@ public static class GameEngine {
 		}
 
 		// set number of coins placed
-		short numberOfCoinsCollected = 0;
-		for (int i = 0; i<coins.Count; i++) {
-			if (coins[i].Collected == true) {
-				++numberOfCoinsCollected;
-			}
-		}
-
-		AvgNumberOfCoinsCollected = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + numberOfCoinsCollected)/(NumberOfgamesPlayed));
+		AvgNumberOfCoinsCollected = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + NumberOfCoinsCollected)/(NumberOfgamesPlayed));
 		AvgNumberOfCoinsPlaced = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + coins.Count)/(NumberOfgamesPlayed));
 		NumberOfCoins_PCG = (short)((AvgNumberOfCoinsCollected / AvgNumberOfCoinsPlaced) * GameConstants.NumberOfHallwayFloorTiles);
 		NumberOfCoinsRequiredToWin_PCG = (short)(NumberOfCoins_PCG*.75);

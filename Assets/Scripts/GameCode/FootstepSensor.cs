@@ -25,24 +25,24 @@ class FootstepSensor {
 
 		short cloestGuard = (short)(GameConstants.FootstepSensorBehindPixels + 10);
 		short distance = cloestGuard;
-		for (int i = 0; i<GameEngine.guards; i++) {
+		for (int i = 0; i<GameEngine.guards.Count; i++) {
 			if (GameEngine.player.MovingDirection == GameConstants.Up && GameEngine.player.LocationY > GameEngine.guards[i].LocationY) { // PlayerAgent facing up
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Down && GameEngine.player.LocationY < GameEngine.guards[i].LocationY) { // PlayerAgent facing down
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Left && GameEngine.player.LocationX < GameEngine.guards[i].LocationX) { // PlayerAgent facing left
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance =(short) (Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Right && GameEngine.player.LocationX > GameEngine.guards[i].LocationX) { // PlayerAgent facing right
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
@@ -68,24 +68,24 @@ class FootstepSensor {
 		
 		short cloestGuard = (short)(GameConstants.FootstepSensorFrontPixels + 10);
 		short distance = cloestGuard;
-		for (int i = 0; i<GameEngine.guards; i++) {
+		for (int i = 0; i<GameEngine.guards.Count; i++) {
 			if (GameEngine.player.MovingDirection == GameConstants.Up && GameEngine.player.LocationY < GameEngine.guards[i].LocationY) { // PlayerAgent facing up
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Down && GameEngine.player.LocationY > GameEngine.guards[i].LocationY) { // PlayerAgent facing down
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Left && GameEngine.player.LocationX > GameEngine.guards[i].LocationX) { // PlayerAgent facing left
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
 			} else if (GameEngine.player.MovingDirection == GameConstants.Right && GameEngine.player.LocationX < GameEngine.guards[i].LocationX) { // PlayerAgent facing right
-				distance = Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2);
+				distance = (short)(Math.Pow(pLocX-GameEngine.guards[i].LocationX,2)+Math.Pow(pLocY-GameEngine.guards[i].LocationY,2));
 				if (distance < cloestGuard) {
 					cloestGuard = distance;
 				}
