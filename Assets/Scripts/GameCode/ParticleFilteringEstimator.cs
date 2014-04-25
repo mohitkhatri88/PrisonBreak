@@ -74,17 +74,17 @@ public class ParticleFilteringEstimator {
 				ulong hashRight = ParticleCoverHash(p, (short)(p.CurrentLocationX+1), p.CurrentLocationY);
 
 
-				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.MapFloor
-					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.TurningCell;
+				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.MapHallwayFloorcell
+					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.TurningFloorcell;
 
-				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.MapFloor
-					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.TurningCell;
+				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.MapHallwayFloorcell
+					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.TurningFloorcell;
 
-				bool canMoveLeftOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.MapFloor
-					|| GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.TurningCell;
+				bool canMoveLeftOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.MapHallwayFloorcell
+					|| GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.TurningFloorcell;
 
-				bool canMoveRightOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.MapFloor
-					|| GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.TurningCell;
+				bool canMoveRightOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.MapHallwayFloorcell
+					|| GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.TurningFloorcell;
 
 
 				// get value

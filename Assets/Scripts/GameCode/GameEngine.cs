@@ -94,19 +94,19 @@ public static class GameEngine {
 
 
 		while (!playerPositionFound) {
-			if (GameMap.GameMapArray[up[0],up[1]]==GameConstants.MapFloor) {
+			if (GameMap.GameMapArray[up[0],up[1]]==GameConstants.MapHallwayFloorcell) {
 				player.LocationX = up[0];
 				player.LocationY = up[1];
 				playerPositionFound = true;
-			} else if (GameMap.GameMapArray[down[0],down[1]]==GameConstants.MapFloor) {
+			} else if (GameMap.GameMapArray[down[0],down[1]]==GameConstants.MapHallwayFloorcell) {
 				player.LocationX = down[0];
 				player.LocationY = down[1];
 				playerPositionFound = true;
-			} else if (GameMap.GameMapArray[right[0],right[1]]==GameConstants.MapFloor) {
+			} else if (GameMap.GameMapArray[right[0],right[1]]==GameConstants.MapHallwayFloorcell) {
 				player.LocationX = right[0];
 				player.LocationY = right[1];
 				playerPositionFound = true;
-			} else if (GameMap.GameMapArray[left[0],left[1]]==GameConstants.MapFloor) {
+			} else if (GameMap.GameMapArray[left[0],left[1]]==GameConstants.MapHallwayFloorcell) {
 				player.LocationX = left[0];
 				player.LocationY = left[1];
 				playerPositionFound = true;
@@ -142,7 +142,7 @@ public static class GameEngine {
 				short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
 				short distance = (short)Math.Sqrt (((xCoord-player.LocationX)*(xCoord-player.LocationX))+((yCoord-player.LocationY)*(yCoord-player.LocationY)));
 
-				if(distance > GameConstants.GuardStartDistanceFromPlayer && GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapFloor) {
+				if(distance > GameConstants.GuardStartDistanceFromPlayer && GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 					guard.LocationX = xCoord;
 					guard.LocationY = yCoord;
 					guardPosFound = true;
@@ -164,8 +164,7 @@ public static class GameEngine {
 				short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
 				short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
 
-				// TODO: prison floor cell may need to be different number to avoid placing agents in prison cell
-				if(GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapFloor) {
+				if(GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 					rat.LocationX = xCoord;
 					rat.LocationY = yCoord;
 					ratPosFound = true;
@@ -182,16 +181,23 @@ public static class GameEngine {
 			short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
 			short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
 
-			// TODO: prison floor cell may need to be different number to avoid placing agents in prison cell
-			if (GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapFloor) {
+			if (GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 				++numberOfFloorSensorsPlace;
 				estimator.AddFloorSensor(xCoord, yCoord);
 			}
 		}
 
 
-		// TODO: check if player is in prison cell (increment NumberOfTimesPlayerEnteredPrisonCells)
+		// check if player is in prison cell (increment NumberOfTimesPlayerEnteredPrisonCells)
 		// toggle PlayerPrevInPrisonCell
+		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.MapPrisonFloorcell && !PlayerPrevInPrisonCell) {
+			PlayerPrevInPrisonCell = true;
+			++TotalTimesPlayerInPrisonCell;
+		}
+
+		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.MapHallwayFloorcell && PlayerPrevInPrisonCell) {
+			PlayerPrevInPrisonCell = false;
+		}
 	}
 
 	public static void setPlayerPosition(short locationX, short locationY) {
@@ -237,10 +243,10 @@ public static class GameEngine {
 			short distanceRight = (short)Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
 
 
-			bool canGoUp = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+1] == GameConstants.MapFloor;
-			bool canGoDown = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-1] == GameConstants.MapFloor;
-			bool canGoRight = GameMap.GameMapArray[guards[i].LocationX+1,guards[i].LocationY] == GameConstants.MapFloor;
-			bool canGoLeft = GameMap.GameMapArray[guards[i].LocationX-1,guards[i].LocationY] == GameConstants.MapFloor;
+			bool canGoUp = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
+			bool canGoDown = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-1] == GameConstants.MapHallwayFloorcell;
+			bool canGoRight = GameMap.GameMapArray[guards[i].LocationX+1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
+			bool canGoLeft = GameMap.GameMapArray[guards[i].LocationX-1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
 
 
 			bool locationSet = false;
@@ -311,10 +317,10 @@ public static class GameEngine {
 		for (int i = 0; i<rats.Count; i++) {
 			short direction = (short)random.Next(0,4);
 
-			bool canGoUp = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY+1] == GameConstants.MapFloor;
-			bool canGoDown = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY-1] == GameConstants.MapFloor;
-			bool canGoRight = GameMap.GameMapArray[rats[i].LocationX+1,rats[i].LocationY] == GameConstants.MapFloor;
-			bool canGoLeft = GameMap.GameMapArray[rats[i].LocationX-1,rats[i].LocationY] == GameConstants.MapFloor;
+			bool canGoUp = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
+			bool canGoDown = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY-1] == GameConstants.MapHallwayFloorcell;
+			bool canGoRight = GameMap.GameMapArray[rats[i].LocationX+1,rats[i].LocationY] == GameConstants.MapHallwayFloorcell;
+			bool canGoLeft = GameMap.GameMapArray[rats[i].LocationX-1,rats[i].LocationY] == GameConstants.MapHallwayFloorcell;
 
 			switch (direction) {
 				case GameConstants.Up:
@@ -357,7 +363,7 @@ public static class GameEngine {
 
 
 		// TODO: check if Player won - is this correct?
-		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.MapExit) {
+		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.MapExitFloorcell) {
 			return false;
 		}
 

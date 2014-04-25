@@ -11,17 +11,28 @@ public static class GameDebugger {
 	 * Prints array data (mainly used for Particle Filtering probability array data)
 	 */
 	public static void PrintArray(long gameStepNumber, string arrayDescription, short[,] data){
-		string html = "<br />"+arrayDescription+", Game Step #"+gameStepNumber+":";
-		html += "<table style=\"font-size:10pt\">";
-		for (int i = 0; i<data.GetLength(0); i++) {
-			html += "<tr>";
-			for (int j = 0; j<data.GetLength(1); j++) {
-				html += "<td>"+(data[i,j])+"</td>";
+		if (GameConstants.GameDebuggerOn) {
+			string html = "<br />"+arrayDescription+", Game Step #"+gameStepNumber+":";
+			html += "<table style=\"font-size:10pt\">";
+			for (int i = 0; i<data.GetLength(0); i++) {
+				html += "<tr>";
+				for (int j = 0; j<data.GetLength(1); j++) {
+					html += "<td>"+(data[i,j])+"</td>";
+				}
+				html += "</tr>";
 			}
-			html += "</tr>";
-		}
-		html += "</table><br /><br />";
+			html += "</table><br /><br />";
 
-		Debug.Log (html);
+			Debug.Log (html);
+		}
+	}
+
+	/*
+	 * Prints debug message
+	 */
+	public static void PrintMessage(string message){
+		if (GameConstants.GameDebuggerOn) {
+			Debug.Log(message);
+		}
 	}
 }

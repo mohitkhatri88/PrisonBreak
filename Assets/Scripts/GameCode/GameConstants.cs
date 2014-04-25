@@ -65,19 +65,27 @@ public class GameConstants {
 	public const short PlayerAgentParticleValue = 50;
 
 	/* Floor value from Map Array */
-	public const short MapFloor = 0;
-	/* Wall value from Map Array */
-	public const short MapWall = 1;
-	/* Exit value from Map Array */
-	public const short MapExit = 2;
-	/* Cell Entrance value from Map Array */
-	public const short MapEntranceCell = 3;
-	/* Turning cell value from Map Array */
-	public const short TurningCell = 4;
-	/* Cell Space value from Map Array */
-	public const short MapCell = 5;
+	public const short MapHallwayFloorcell = 0;
 
+	/* Wall value from Map Array */
+	public const short MapWallFloorcell = 1;
+
+	/* Exit value from Map Array */
+	public const short MapExitFloorcell = 2;
+
+	/* Cell Entrance value from Map Array */
+	public const short MapEntranceFloorcell = 3;
+
+	/* Turning cell value from Map Array */
+	public const short TurningFloorcell = 4;
+
+	/* Cell Space value from Map Array */
+	public const short MapPrisonFloorcell = 5;
+
+	/* Distance guards start from player */
 	public const short GuardStartDistanceFromPlayer = 20;
+
+	/* Number of hallway floorcell pixels in GameMap */
 	public const short NumberOfHallwayFloorTiles = 4930;
 
 	/* Number of game steps to skip before printing GameDebugger */
