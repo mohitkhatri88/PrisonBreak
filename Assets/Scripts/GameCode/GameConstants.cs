@@ -64,11 +64,18 @@ public class GameConstants {
 	/* IParticle value when PlayerAgent steps on floor sensor */
 	public const short PlayerAgentParticleValue = 50;
 
-	/* floor cell types */
+	/* Floor value from Map Array */
 	public const short MapFloor = 0;
+	/* Wall value from Map Array */
 	public const short MapWall = 1;
+	/* Exit value from Map Array */
+	public const short MapExit = 2;
+	/* Cell Entrance value from Map Array */
+	public const short MapEntranceCell = 3;
+	/* Turning cell value from Map Array */
 	public const short TurningCell = 4;
-	public const short EntranceCell = 3;
+	/* Cell Space value from Map Array */
+	public const short MapCell = 5;
 
 	public const short GuardStartDistanceFromPlayer = 20;
 	public const short NumberOfHallwayFloorTiles = 4930;

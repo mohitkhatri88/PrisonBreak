@@ -39,7 +39,7 @@ public class GUIManager : MonoBehaviour {
 		
 		for(int i = 0; i < 100 ; i++){
 			for(int j = 0; j < 100; j++){
-				if(tempMap[i,j] != 0 && tempMap[i,j] != 4 && tempMap[i,j] != 3){
+				if(tempMap[i,j] != 0 && tempMap[i,j] != 4 && tempMap[i,j] != 3 && tempMap[i,j] != 5){
 					GameObject cube = (GameObject)Instantiate(GameObject.Find("Wall"), new Vector3(((j - 50f) + 0.5f) * 10, 25f, ((49f-i) + 0.5f) * 10), Quaternion.identity);
 					//cube.transform.localPosition = new Vector3(((j - 50f) + 0.5f) * 10, 25f, ((49f-i) + 0.5f) * 10);
 					//cube.transform.localPosition = new Vector3(((j - 50) + 0.5f) * 10f, 25f, ((49 - i) + 0.5f) * 10f);

@@ -338,7 +338,7 @@ public static class GameEngine {
 
 
 		// TODO: check if Player won - is this correct?
-		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.EntranceCell) {
+		if (GameMap.GameMapArray[player.LocationX,player.LocationY]==GameConstants.MapExit) {
 			return false;
 		}
 
