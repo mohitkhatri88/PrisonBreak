@@ -53,4 +53,16 @@ public class ReinforcementLearner {
 		//Compare the values for the current location of the cellmate. I assume this comes from the cellmate agent class. 
 		return GameConstants.Left;
 	}
+
+	/*
+	 * Gets new location and directionfor cellmate
+	 */
+	public short[] GetNextLocationWithDirection(short currentLocationX, short currentLocationY) {
+		// TODO: change
+		short[] location = new short[3];
+		// location[0] is x
+		// location[1] is y
+		// location[2] is direction
+		return location;
+	}
 }

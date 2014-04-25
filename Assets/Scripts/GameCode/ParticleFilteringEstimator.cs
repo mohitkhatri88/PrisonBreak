@@ -17,7 +17,7 @@ public class ParticleFilteringEstimator {
 	List<ulong> FloorSensors;
 
 	/* Contains GameMap positions that a respective particle have covered (key: hash of particle number, locationX, and locationY)  */
-	List<long> FloorcellPartcileCover;
+	List<ulong> FloorcellPartcileCover;
 
 	/*
 	 * Construtor
@@ -26,17 +26,18 @@ public class ParticleFilteringEstimator {
 		Particles = new List<Particle>();
 		FloorCellProbabilities = new short[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		FloorSensors = new List<ulong>();
+		FloorcellPartcileCover = new List<ulong>();
 	}
+
+	// TODO: fix x,y location cooridnates - make sure they are indexed right
 
 	/*
 	 * Updates Agents knowledge of the environment
-	 * 
-	 * TODO: use GameConstants for GameMapArray floor cell types
 	 */	
 	public void UpdateEstimator() {
 		// decrement particle locations
 		for (int x = 0; x<GameConstants.MapWidthPixels; x++) {
-			for (int y = 0; x<GameConstants.MapHeightPixels; y++) {
+			for (int y = 0; y<GameConstants.MapHeightPixels; y++) {
 				if (GameMap.GameMapArray[x,y] == 0 || GameMap.GameMapArray[x,y] == 0) {
 					if (FloorCellProbabilities[x,y] > 0) {
 						FloorCellProbabilities[x,y] = (short)(FloorCellProbabilities[x,y] - 1);
@@ -67,24 +68,23 @@ public class ParticleFilteringEstimator {
 
 			// update particle locations and avoid adjacent duplicates
 			else {
-				long hashUp = ParticleCoverHash(p, p.CurrentLocationX, (short)(p.CurrentLocationY+1));
-				long hashDown = ParticleCoverHash(p, p.CurrentLocationX, (short)(p.CurrentLocationY-1));
-				long hashLeft = ParticleCoverHash(p, (short)(p.CurrentLocationX-1), p.CurrentLocationY);
-				long hashRight = ParticleCoverHash(p, (short)(p.CurrentLocationX+1), p.CurrentLocationY);
+				ulong hashUp = ParticleCoverHash(p, p.CurrentLocationX, (short)(p.CurrentLocationY+1));
+				ulong hashDown = ParticleCoverHash(p, p.CurrentLocationX, (short)(p.CurrentLocationY-1));
+				ulong hashLeft = ParticleCoverHash(p, (short)(p.CurrentLocationX-1), p.CurrentLocationY);
+				ulong hashRight = ParticleCoverHash(p, (short)(p.CurrentLocationX+1), p.CurrentLocationY);
 
 
-				// TODO: use floor cell types
-				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0 
-					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == 0;
+				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.MapFloor
+					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY+1)] == GameConstants.TurningCell;
 
-				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0 
-					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == 0;
+				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.MapFloor
+					|| GameMap.GameMapArray[p.CurrentLocationX,(short)(p.CurrentLocationY-1)] == GameConstants.TurningCell;
 
-				bool canMoveLeftOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0 
-					|| GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == 0;
+				bool canMoveLeftOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.MapFloor
+					|| GameMap.GameMapArray[(short)(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.TurningCell;
 
-				bool canMoveRightOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0 
-					|| GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == 0;
+				bool canMoveRightOnMap = GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.MapFloor
+					|| GameMap.GameMapArray[(short)(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.TurningCell;
 
 
 				// get value
@@ -215,12 +215,35 @@ public class ParticleFilteringEstimator {
 
 	/*
 	 * Determines where PlayerAgent is most likely to be within range of Guard's limited sight.
+	 * 
+	 * Returns xy location value in short[0] = x, short[1] = y
 	 */	
 	public short[] GetGuardTargetLocation(GuardAgent guard) {
-		
-		
-		
-		return null;
+		int startX = guard.LocationX-(GameConstants.GuardSearchDistancePixels/2);
+		int startY = guard.LocationY-(GameConstants.GuardSearchDistancePixels/2);;
+		int endX = guard.LocationX+(GameConstants.GuardSearchDistancePixels/2);
+		int endY = guard.LocationY+(GameConstants.GuardSearchDistancePixels/2);
+
+		short highestParticleValue = -1;
+		short xToSave = -1;
+		short yToSave = -1;
+
+		for (int x = startX; x<endX; x++) {
+			for (int y = startY; y<endY; y++) {
+				if (x>=0 && x<GameConstants.MapWidthPixels && y>=0 && y<GameConstants.MapHeightPixels){
+					if (FloorCellProbabilities[x,y] >= highestParticleValue) {
+						highestParticleValue = FloorCellProbabilities[x,y];
+						xToSave = (short)x;
+						yToSave = (short)y;
+					}
+				}
+			}			
+		}
+
+		short[] points = new short[2];
+		points[0] = xToSave;
+		points[1] = yToSave;
+		return points;
 	}
 
 
@@ -242,7 +265,7 @@ public class ParticleFilteringEstimator {
 	/*
 	 * Creates unique value for floor cell and particle combination
 	 */	
-	public long ParticleCoverHash(Particle particle, short locationX, short locationY) {
-		return 0;
+	public ulong ParticleCoverHash(Particle particle, short locationX, short locationY) {
+		return (ulong)(((ulong)locationX)*((ulong)123) + ((ulong)locationY)*((ulong)23413));
 	}
 }

@@ -3,6 +3,8 @@ using System.Collections;
 
 /*
  * Game constants
+ * 
+ * TODO: update and tweak constants
  */
 public class GameConstants {
 	/* Left direction */
@@ -30,10 +32,10 @@ public class GameConstants {
 	public const short RatAgentId = 7;
 
 	/* Distance that guard can move from their current location */
-	public const short GuardSearchDistance = -1;
+	public const short GuardSearchDistancePixels = 25;
 
 	/* Distance that guard can catch PlayerAgent */
-	public const short PlayerCaughtDistance = -1;
+	public const short PlayerCaughtDistancePixels = 10;
 
 	/* Number of pixels on 3D map for every one pixel in 2D GameMap */
 	public const short MapScalePixels = 10;
@@ -62,10 +64,12 @@ public class GameConstants {
 	/* IParticle value when PlayerAgent steps on floor sensor */
 	public const short PlayerAgentParticleValue = 50;
 
-	// TODO: add constants for floor cell types (e.g. 0 = floor, 1 = call)
+	/* floor cell types */
 	public const short MapFloor = 0;
 	public const short MapWall = 1;
-	public const short MapExit = 2;
-	public const short MapPrinsonCell = 3;
-	public const short MapTurningCell = 4;
+	public const short TurningCell = 4;
+	public const short EntranceCell = 3;
+
+	public const short GuardStartDistanceFromPlayer = 20;
+	public const short NumberOfHallwayFloorTiles = 4930;
 }
