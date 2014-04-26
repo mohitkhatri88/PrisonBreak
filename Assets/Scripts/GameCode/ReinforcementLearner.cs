@@ -37,6 +37,7 @@ public class ReinforcementLearner {
 		CellmateExploredMap = new byte[GameConstants.SizeOfMapArrayPixels];
 		//CellMap = new TurningFloorCell[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		epsilon = 0.9;
+		this.PrevDirectionTaken = GameConstants.Up;
 	}
 
 	/*
@@ -48,12 +49,14 @@ public class ReinforcementLearner {
 		 * In case, we dont reach the middle, we just have to keep stepping like before
 		 */
 		short nextDirection = this.PrevDirectionTaken;
+		/*
 		//Check to see if we should change direction. 
 		if (this.shouldChangeDirection(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
 			/*Check to see if this is a turn cell. 
 			 * If it is, find the best direction, and update the previous direction. 
 			 * Also, create a new turn cell if this one didnt exist. 
 			 */
+		/*
 			if (this.isTurnCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
 				//Index for the current location. 
 				ulong index = GameMap.HashFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY);
@@ -73,8 +76,9 @@ public class ReinforcementLearner {
 			}
 			//Now, decide the best direction from the available one's. 
 
-			//Update the previous turn cell based on the current cell's distance from the exit position. 
+			//Update the previous turn cell based on the current cell's distance from the exit position.
 		} 
+		*/
 		return this.PrevDirectionTaken;
 	}
 
