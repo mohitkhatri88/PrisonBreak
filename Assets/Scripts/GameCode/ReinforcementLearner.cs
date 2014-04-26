@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -37,11 +38,15 @@ public class ReinforcementLearner {
 		CellmateExploredMap = new byte[GameConstants.SizeOfMapArrayPixels];
 		//CellMap = new TurningFloorCell[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		epsilon = 0.9;
-		this.PrevDirectionTaken = GameConstants.Up;
+		this.PrevDirectionTaken = GameConstants.Down;
+		this.PrevTurnFloorCellIndex = GameMap.HashFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY);
+		this.TurningFloorCellMap.Add(this.PrevTurnFloorCellIndex, new TurningFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY));
+		this.PrevTurnFloorCellIndex = GameMap.HashFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY);
 	}
 
 	/*
 	 * Updates Agents knowledge of the environment
+	 * TODO: Change the code such that it takes into account the propoer initialization of the cellmate. 
 	 */
 	public short UpdateLearner() {
 		/*
@@ -49,89 +54,180 @@ public class ReinforcementLearner {
 		 * In case, we dont reach the middle, we just have to keep stepping like before
 		 */
 		short nextDirection = this.PrevDirectionTaken;
-		/*
-		//Check to see if we should change direction. 
-		if (this.shouldChangeDirection(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
+		short currentX = GameEngine.cellmate.LocationX;
+		short currentY = GameEngine.cellmate.LocationY;
+		System.Random random = new System.Random();
+
+		//Check to see if we should change direction.Just does a check to see if are at the middle of the current cell.  
+		if (this.shouldChangeDirection(currentX, currentY)) {
 			/*Check to see if this is a turn cell. 
 			 * If it is, find the best direction, and update the previous direction. 
 			 * Also, create a new turn cell if this one didnt exist. 
 			 */
-		/*
-			if (this.isTurnCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
+			if (this.isTurnCell(currentX, currentY)) {
 				//Index for the current location. 
-				ulong index = GameMap.HashFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY);
+				ulong index = GameMap.HashFloorCell(currentX, currentY);
 
 				//Add a turning cell if it doesnt exist. 
 				if(!this.TurningFloorCellMap.ContainsKey(index)) {
-					this.TurningFloorCellMap.Add(index, new TurningFloorCell(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY));
+					this.TurningFloorCellMap.Add(index, new TurningFloorCell(currentX, currentY));
 				}
-
 				//get the next direction that should be chosen. 
-				nextDirection = this.getBestDirection(TurningFloorCellMap[index]);
+				nextDirection = this.getBestDirectionTurnCell(TurningFloorCellMap[index]);
+				//Also, update the previous floor cell with the probabilities based on the current cell.
+				this.updatePreviousTurnCell(index, false);
 
-				//Also, update the previous floor cell with the probabilities based on the current cell. 
-
-				//Update the previous turn cell index. 
+				//Current values become the previous values. 
 				this.PrevTurnFloorCellIndex = index;
+				this.PrevDirectionTaken = nextDirection;
+			} else {
+				//If its not a turning cell, we still might need to change the direction if its a dead end, or if a turn comes in the path. 
+				if (!isDirectionValid(this.PrevDirectionTaken, currentX, currentY)) {
+					nextDirection = this.getBestDirectionNormalCell(this.PrevDirectionTaken, currentX, currentY);
+				}
 			}
-			//Now, decide the best direction from the available one's. 
-
-			//Update the previous turn cell based on the current cell's distance from the exit position.
+			//Changed the direction. Move on. 
 		} 
-		*/
-		return this.PrevDirectionTaken;
-	}
-
-	public short getBestDirection(TurningFloorCell turnCell) {
-		//Compare probabilities of all the directions to see which one is best. 
-		short nextDirection = GameConstants.Left;
-		double bestProbability = turnCell.LeftCornerProbability;
-		if (turnCell.DownCornerProbability >= bestProbability) {
-			nextDirection = GameConstants.Down;
-			bestProbability = turnCell.DownCornerProbability;
-		}
-		if (turnCell.UpCornerProbability >= bestProbability) {
-			nextDirection = GameConstants.Up;
-			bestProbability = turnCell.UpCornerProbability;
-		}
-		if (turnCell.RightCornerProbability >= bestProbability) {
-			nextDirection = GameConstants.Right;
-		}
-
 		return nextDirection;
 	}
 
 	/*
-	 * Check to see if the current cell is a turning cell. 
-	 * TODO: How to check if prison cell is open, and how to get into it. 
+	 * Check if the previous direction works in the context of the current cell.
+	 * Only call this function from the center of the bigger abstract entity that is 'CELL'.
+	 */
+	public bool isDirectionValid(short direction, short currentX, short currentY) {
+		bool result = true;
+		short nextCell = GameConstants.MapHeightPixels/2 + 1;
+		//Update the cell locaiton to that of the new cells starting. 
+		if (this.PrevDirectionTaken == GameConstants.Left) {
+			currentX -= nextCell;
+		} else if (this.PrevDirectionTaken == GameConstants.Right) {
+			currentX += nextCell;
+		} else if (this.PrevDirectionTaken == GameConstants.Up) {
+			currentY += nextCell;
+		} else if (this.PrevDirectionTaken == GameConstants.Down) {
+			currentY -= nextCell;
+		}
+		//Check if this is indeed part of the hallway. 
+		if (GameMap.GameMapArray[currentX, currentY] != GameConstants.MapHallwayFloorcell) {
+			result = false;
+		}
+		return result;
+	}
+
+	/*
+	 * Code to update the probabilities of the previous cell. 
+	 * TODO : change the code once you initialize the currentlocation properly. 
+	 */
+	public void updatePreviousTurnCell(ulong index, Boolean cameFromDeadEnd) {
+		short currentX = TurningFloorCellMap[index].LocationX;
+		short currentY = TurningFloorCellMap[index].LocationX;
+
+		if (cameFromDeadEnd) {
+			double temp  = TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[this.PrevDirectionTaken] = 0.0;
+			//Reduce the prev probability to zero. 
+			TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[this.PrevDirectionTaken] = 0.0;
+			//Distribute that probability among other 
+			for (short i=0;i<4;i++) {
+				if (i != this.PrevDirectionTaken) {
+					TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[(int)i]+=temp/3;
+				}
+			}
+		} else {
+			if (this.PrevTurnFloorCellIndex != index) {
+				//Compare distances between the current cell and the previous cell. 
+				short previousX = TurningFloorCellMap[this.PrevTurnFloorCellIndex].LocationX;
+				short previousY = TurningFloorCellMap[this.PrevTurnFloorCellIndex].LocationY;
+				if (distanceFromExit(currentX, currentY) >= distanceFromExit(previousX, previousY)) {
+					//Increment all the other probabilities.   
+					for (short i=0;i<4;i++) {
+						TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[(int)i]+=0.04;
+					}
+					TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[this.PrevDirectionTaken]-=0.16;
+				} else {
+					//Decrememnt all the other probabilities.   
+					for (short i=0;i<4;i++) {
+						TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[i]-=0.04;
+					}
+					TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[this.PrevDirectionTaken]+=0.16;
+				}
+			}
+		}
+		//Dont let any probability fall below zero. 
+		for (int i=0;i<4;i++) {
+			if (TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[i] < 0) {
+				TurningFloorCellMap[this.PrevTurnFloorCellIndex].cornerProbabilities[i]=0.0;
+			}
+		}
+	}
+
+	/*
+	 * Get the distance of the current location from the exit.
+	 */
+	public short distanceFromExit(short locationX, short locationY) {
+		return (short)Math.Sqrt(((locationX-GameConstants.exitX)*(locationX-GameConstants.exitX)) + ((locationY-GameConstants.exitY)*(locationY-GameConstants.exitY)));
+	}
+
+	/*
+	 * For the current turning cell, find the best direction that could be. 
+	 * Decides the best path based on the epsilong greedy strategy so exploration can be controlled. 
+	 */
+	public short getBestDirectionTurnCell(TurningFloorCell turnCell) {
+		//Compare probabilities of all the directions to see which one is best. 
+		short nextDirection = GameConstants.Left;
+		double bestProbability = 0.0;
+		for (short i=0;i<4;i++) {
+			if (turnCell.cornerProbabilities[i] >=bestProbability && isDirectionValid(i, turnCell.LocationX, turnCell.LocationY)) {
+				nextDirection = i;
+				bestProbability = turnCell.cornerProbabilities[i];
+			}
+		}
+		return nextDirection;
+	}
+
+	/*
+	 * For a  normal cell, there are no choices whenit comes to choosing. 
+	 * The cellmate should alwaya follow the same direction it came from. 
+	 * Only in the cases of a dead end does the cellmate opt for the opposite direction that it came from. 
+	 */
+	public short getBestDirectionNormalCell(short previousDirection, short locationX, short locationY) {
+		short result = previousDirection;
+		short invalidDirection = 0;
+		//Check to see if this is a dead end
+		int invalidDirectionCount = 0;
+		for (short i=0; i<4; i++) {
+			if (!isDirectionValid(i, locationX, locationY)) {
+				invalidDirectionCount++;
+			} else {
+				result = i;
+			}
+		}
+		//If the invalid Direction count is 3, then we have hit a dead end, and we can return the selected direction. 
+		if (invalidDirectionCount == 3) {
+			//Update the previous turn cell so that it cant take this direction. 
+			this.updatePreviousTurnCell(this.PrevTurnFloorCellIndex, true);
+		} else {
+			//Find the best direction that is not the opposite of the previousdirection.
+			if (previousDirection == 0 || previousDirection == 1) {invalidDirection = (short)(previousDirection + 2);}
+			if (previousDirection == 2 || previousDirection == 3) {invalidDirection = (short)(previousDirection - 2);}
+			for (short i=0; i<4; i++) {
+				if (i!=invalidDirection && isDirectionValid(i, locationX, locationY)) {result = i;break;}
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * Check if the current cell is a turn cell. Just ask the game map array to get the values. 
 	 */
 	public bool isTurnCell(short locationX, short locationY) {
-		bool isTurnCell = false;
-		//Number of Possible turns. 
-		int nextCell = GameConstants.MapHeightPixels/2 + 1;
-		int possibleTurns = 0;
-		int right = locationX + nextCell;
-		int left = locationX - nextCell;
-		int up = locationY + nextCell;
-		int down = locationY - nextCell;
-		if (right==GameConstants.MapEntranceFloorcell || right==GameConstants.MapExitFloorcell || right==GameConstants.MapHallwayFloorcell) {
-			possibleTurns++;
+		bool result = false;
+		if (GameMap.GameMapArray [locationX, locationY] == GameConstants.TurningFloorcell) {
+			result = true;
 		}
-		if (left==GameConstants.MapEntranceFloorcell || left==GameConstants.MapExitFloorcell || left==GameConstants.MapHallwayFloorcell) {
-			possibleTurns++;
-		}
-		if (up==GameConstants.MapEntranceFloorcell || up==GameConstants.MapExitFloorcell || right==GameConstants.MapHallwayFloorcell) {
-			possibleTurns++;
-		}
-		if (down==GameConstants.MapEntranceFloorcell || down==GameConstants.MapExitFloorcell || down==GameConstants.MapHallwayFloorcell) {
-			possibleTurns++;
-		}
-		if (possibleTurns >= 2) {
-			isTurnCell = true;
-		}
-
-		return isTurnCell;
+		return result;
 	}
+
 	/*
 	 * You should always consider changing direction when reaching the middle of a cell. Keeps thing's consistent. 
 	 */
@@ -140,15 +236,10 @@ public class ReinforcementLearner {
 		int cellCenter = GameConstants.MapHeightPixels / 2;
 		int modX = (locationX - cellCenter) % GameConstants.TurningFloorCellWidthPixels;
 		int modY = (locationY - cellCenter) % GameConstants.TurningFloorCellHeightPixels;
-		if (modX == 0 || modY == 0) {
+		if (modX == 0 && modY == 0) {
 			result = true;
 		}
 		return result;
-	}
-
-	public short GetNextDirection() {
-		//Compare the values for the current location of the cellmate. I assume this comes from the cellmate agent class. 
-		return GameConstants.Left;
 	}
 
 	/*

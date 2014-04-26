@@ -47,7 +47,7 @@ public static class GameEngine {
 	// AI
 	public static ParticleFilteringEstimator estimator = new ParticleFilteringEstimator();
 	public static ReinforcementLearner learner = new ReinforcementLearner();
-
+		
 
 	public static void InitGame() {
 		// start timer

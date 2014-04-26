@@ -108,4 +108,10 @@ public class GameConstants {
 
 	/*  starting range to listen for footsteps in front of PlayerAgent */
 	public const short FootstepSensorFrontPixels = 10;	
+
+	/*XLocation for the exit.*/
+	public const short exitX = 1;
+
+	/*Y Location for the exit*/
+	public const short exitY = 1;
 }
