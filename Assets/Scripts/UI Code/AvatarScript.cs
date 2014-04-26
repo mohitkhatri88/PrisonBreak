@@ -11,8 +11,6 @@ public class AvatarScript : MonoBehaviour {
 	public float gravity = 10.0F;
 	public float windSlow = 0.2f;
 	
-	public AudioClip BoosterS;
-	
 	// two curves for attack/decay
 	public AnimationCurve groundAttack;
 	public AnimationCurve groundDecay;
@@ -40,6 +38,7 @@ public class AvatarScript : MonoBehaviour {
 	CharacterController controller;
 	CollisionFlags collisionFlags;
 	bool isGrounded;
+	short previousX, previousY;
 
 	void Start (){
 		// must have both!
@@ -48,7 +47,7 @@ public class AvatarScript : MonoBehaviour {
 		GameEventManager.GameStart += GameStart;
 		GameEventManager.GameOver += GameOver;
 		
-		initialPosition = transform.position;
+		initialPosition = ConvertLocation.ConvertToReal(GameEngine.player.LocationX, transform.localPosition.y, GameEngine.player.LocationY);
 		initialRotation = transform.rotation;
 			
      	// Assign body parts to variables;  
@@ -68,8 +67,10 @@ public class AvatarScript : MonoBehaviour {
 	
 	void GameStart() {
 		gameObject.SetActive(true);	
-
-		transform.position = initialPosition;
+		previousX = GameEngine.player.LocationX;
+		previousY = GameEngine.player.LocationY;
+		//GameEngine.setPlayerPosition((short)(GameEngine.guards[0].LocationX + 1), (short)(GameEngine.guards[0].LocationY+1));
+		transform.position = ConvertLocation.ConvertToReal(previousX, transform.localPosition.y, previousY);
 		transform.rotation = initialRotation;		
 		
 		collisionFlags = CollisionFlags.None;
@@ -106,10 +107,11 @@ public class AvatarScript : MonoBehaviour {
 			moveVector.y -= gravity * Time.deltaTime;	
 			collisionFlags = controller.Move(moveVector * Time.deltaTime);	
 		}else{
-	       	horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
+			Vector3 tempC = controller.velocity;
+	       	horizontalVelocity = new Vector3(tempC.x, 0, tempC.z);
 			horizontalVelocity = transform.InverseTransformDirection(horizontalVelocity);
 	        horizontalSpeed = horizontalVelocity.z;  // want the plus or minus on speed
-	        verticalSpeed = controller.velocity.y;
+	        verticalSpeed = tempC.y;
 			// When we are walking, do something interesting that shows which is the direction of travel				
 			if (horizontalSpeed > 0.1 ) { 	
 				body.transform.localRotation = Quaternion.Euler (10,0,0);
@@ -119,9 +121,15 @@ public class AvatarScript : MonoBehaviour {
 				body.transform.localRotation = Quaternion.Euler (0,0,0);
 			}	
 			inputRotate = Input.GetAxis("Horizontal");
-			moveVector = body.transform.forward*moveSpeed*Input.GetAxis("Vertical")*Time.deltaTime;
-			this.transform.Rotate(new Vector3(0,Input.GetAxis("Horizontal")*rotateSpeed*Time.deltaTime,0));
+			inputMove = Input.GetAxis ("Vertical");
+			moveVector = body.transform.forward*moveSpeed*inputMove*Time.deltaTime;
+			this.transform.Rotate(new Vector3(0,inputRotate*rotateSpeed*Time.deltaTime,0));
 			collisionFlags = controller.Move(moveVector+new Vector3(0,-gravity*Time.deltaTime,0));
+			Vector2 temp = ConvertLocation.ConvertTo2D(transform.localPosition);
+			if(previousX != (short)temp.x || previousY != (short)temp.y){
+				previousX = (short)temp.x; previousY = (short) temp.y;
+				GameEngine.setPlayerPosition(previousX, previousY);
+			}
 		}
 		
 		// check for restart
