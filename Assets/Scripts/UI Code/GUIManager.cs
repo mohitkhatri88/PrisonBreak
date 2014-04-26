@@ -63,6 +63,9 @@ public class GUIManager : MonoBehaviour {
 
 		/* Making of Coins and intialize their position from Game Engine */
 		startTime = Time.time;
+
+		GameObject cellmateO = GameOver.Find("CellMate");
+		cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 	}
 	
 	void Update () {
@@ -87,6 +90,7 @@ public class GUIManager : MonoBehaviour {
 					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
 				}*/
 				startTime = Time.time;
+				cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 			}
 		}
 	}
