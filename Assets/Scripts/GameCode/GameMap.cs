@@ -53,7 +53,7 @@ public static class GameMap {
 	 */
 	public static ulong HashFloorCell(int locationX, int locationY) {
 		//Getting the hash value for the given location. 
-		return (ulong)(((ulong)locationX)*((ulong)27191) + ((ulong)locationY);
+		return (ulong)(((ulong)locationX)*((ulong)27191) + ((ulong)locationY));
 	}
 
 }
