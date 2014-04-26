@@ -359,30 +359,31 @@ public static class GameEngine {
 
 
 		// check if cellmate is caught
-		/*if (lowestCellmateDistanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
+		if (lowestCellmateDistanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			cellmate.Alive = 0;
-		}*/
+		}
 	
 
 		// check if Player is on floor sensor
 		if (estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY)) {
+			Debug.Log ("asdasdasdasdasdasdasdasd");
 			estimator.CreateParticle(GameConstants.PlayerAgentId, player.LocationX, player.LocationY);
 		}
 
 		// check if Player collected a coin
-		/*for (int j = 0; j<coins.Count; j++) {
+		for (int j = 0; j<coins.Count; j++) {
 			if (Math.Abs (coins[j].LocationX-player.LocationX) < 2 && Math.Abs (coins[j].LocationY-player.LocationY) < 2) {
 				coins[j].Collected = true;
 				++NumberOfCoinsCollected;
 			}
-		}*/
+		}
 
 
 		// check if Player is caught by Guard
-		/*if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
+		if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			player.Alive = 0;
 			return false;
-		}*/
+		}
 
 
 		// TODO: check if Player won - is this correct?
