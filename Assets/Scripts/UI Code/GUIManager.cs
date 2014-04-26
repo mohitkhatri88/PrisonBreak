@@ -14,6 +14,7 @@ public class GUIManager : MonoBehaviour {
 	private List<Coin> coinObjects = new List<Coin>();
 	private float startTime;
 	private float endTime;
+	GameObject cellmateO;
 	
 	void Start () {
 		// perhaps should check here to make sure only one?
@@ -41,7 +42,7 @@ public class GUIManager : MonoBehaviour {
 		GameObject miniO = GameObject.Find ("MiniGuard");
 		for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 			GuardAgent tempG = GameEngine.guards[i];
-			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY), Quaternion.identity);
+			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX), Quaternion.identity);
 			guardObjects.Add (Guard);
 			GameObject Mini = (GameObject) Instantiate (miniO,miniO.transform.localPosition, Quaternion.identity);
 			Mini.GetComponent<MiniMapGuard>().target = Guard;
@@ -63,6 +64,9 @@ public class GUIManager : MonoBehaviour {
 
 		/* Making of Coins and intialize their position from Game Engine */
 		startTime = Time.time;
+
+		cellmateO = GameObject.Find("CellMate");
+		cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 	}
 	
 	void Update () {
@@ -80,13 +84,14 @@ public class GUIManager : MonoBehaviour {
 				GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
 				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 					GuardAgent tempG = GameEngine.guards[i];
-					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY);
+					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX);
 				}
 				/*for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
 					RatAgent tempR = GameEngine.rats[i];
 					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
 				}*/
 				startTime = Time.time;
+				cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 			}
 		}
 	}

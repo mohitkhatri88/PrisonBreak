@@ -18,6 +18,8 @@ public class TurningFloorCell {
 	/* probability of agent taking up corner */
 	public double UpCornerProbability { get; set; }
 
+	public double[] cornerProbabilities { get; set;}
+
 	/* x coordinate in GameMap GameMapArray */
 	public int LocationX { get; set; }
 
@@ -37,6 +39,7 @@ public class TurningFloorCell {
 		this.RightCornerProbability = 0.25;
 		this.UpCornerProbability = 0.25;
 		this.DownCornerProbability = 0.25;
+		this.cornerProbabilities = new double[4];
 	}
 }
 

@@ -23,8 +23,12 @@ public class Particle {
 	/* Checks whether particle was created during current game step */
 	public bool JustCreated { get; set; }
 
+	public ulong UniqueId { get; set; }
+
+	public bool ParticleRemoved { get; set; }
+
 	public Particle(int MovingDirection, int CurrentLocationX, int CurrentLocationY,
-	                int ParticleValue, int TimeToLive, bool JustCreated){
+	                int ParticleValue, int TimeToLive, bool JustCreated, ulong id){
 
 		this.MovingDirection = MovingDirection;
 		this.CurrentLocationX = CurrentLocationX;
@@ -32,6 +36,7 @@ public class Particle {
 		this.ParticleValue = ParticleValue;
 		this.TimeToLive = TimeToLive;
 		this.JustCreated = JustCreated;
+		this.UniqueId = id;
 	}
 
 }

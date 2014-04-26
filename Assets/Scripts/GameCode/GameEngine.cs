@@ -48,6 +48,8 @@ public static class GameEngine {
 	public static ParticleFilteringEstimator estimator = new ParticleFilteringEstimator();
 	public static ReinforcementLearner learner = new ReinforcementLearner();
 
+	public static bool WasPlayerPrevOnFloorSensor = false;
+
 
 	public static void InitGame() {
 		// start timer
@@ -299,7 +301,7 @@ public static class GameEngine {
 				}
 
 			}
-
+			
 			if (locationSet) {
 				// nothing
 			}
@@ -366,9 +368,15 @@ public static class GameEngine {
 	
 
 		// check if Player is on floor sensor
-		if (estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY)) {
-			Debug.Log ("asdasdasdasdasdasdasdasd");
+		if (estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY) && !WasPlayerPrevOnFloorSensor) {
+			Debug.Log ("At floor sensor");
 			estimator.CreateParticle(GameConstants.PlayerAgentId, player.LocationX, player.LocationY);
+			WasPlayerPrevOnFloorSensor = true;
+		}
+
+		if (!estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY) && WasPlayerPrevOnFloorSensor) {
+			WasPlayerPrevOnFloorSensor = false;
+			Debug.Log("Left floor sensor");
 		}
 
 		// check if Player collected a coin
@@ -383,6 +391,8 @@ public static class GameEngine {
 		// check if Player is caught by Guard
 		if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			player.Alive = 0;
+			Debug.Log ("CAUGHT!!!!");
+
 			return false;
 		}
 
