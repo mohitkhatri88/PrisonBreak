@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\GameCode\ReinforcementLearner.cs" />
      <Compile Include="Assets\Scripts\GameCode\TurningFloorCell.cs" />
      <Compile Include="Assets\Scripts\UI Code\AvatarScript.cs" />
+     <Compile Include="Assets\Scripts\UI Code\ConvertLocation.cs" />
      <Compile Include="Assets\Scripts\UI Code\GUIManager.cs" />
      <Compile Include="Assets\Scripts\UI Code\GameEventManager.cs" />
      <Compile Include="Assets\Scripts\UI Code\GuardScript.cs" />

@@ -12,6 +12,9 @@ public class GUIManager : MonoBehaviour {
 	private List<GameObject> guardObjects = new List<GameObject>();
 	private List<GameObject> ratObjects = new List<GameObject>();
 	private List<Coin> coinObjects = new List<Coin>();
+	private float startTime;
+	private float endTime;
+	GameObject cellmateO;
 	
 	void Start () {
 		// perhaps should check here to make sure only one?
@@ -51,20 +54,23 @@ public class GUIManager : MonoBehaviour {
 		Mini.GetComponent<MiniMapGuard>().target = Guard;*/
 
 		/* Making of Rats and intialize their position from Game Engine */
-		GameObject ratO = GameObject.Find ("Rat");
+		/*GameObject ratO = GameObject.Find ("Rat");
 		for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
 			RatAgent tempR = GameEngine.rats[i];
 			GameObject Rat = (GameObject) Instantiate (ratO, ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY), Quaternion.identity);
 			ratObjects.Add (Rat);
-		}
+		}*/
 		/* Making of Cell Mate */
 
 		/* Making of Coins and intialize their position from Game Engine */
+		startTime = Time.time;
 
+		cellmateO = GameObject.Find("CellMate");
+		cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 	}
 	
 	void Update () {
-
+		endTime = Time.time;
 		if(Input.GetButtonDown("Jump") && !isGame){
 			gameOverText.enabled = false;
 			instructionsText.enabled = false;
@@ -73,14 +79,19 @@ public class GUIManager : MonoBehaviour {
 			GameEventManager.TriggerGameStart();
 		}
 		if(isGame){
-			GameEngine.RunGame();
-			for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
-				GuardAgent tempG = GameEngine.guards[i];
-				guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY);
-			}
-			for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
-				RatAgent tempR = GameEngine.rats[i];
-				ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
+			if(endTime - startTime > 1){
+				GameEngine.RunGame();
+				GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
+				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
+					GuardAgent tempG = GameEngine.guards[i];
+					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY);
+				}
+				/*for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
+					RatAgent tempR = GameEngine.rats[i];
+					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
+				}*/
+				startTime = Time.time;
+				cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 			}
 		}
 	}
@@ -96,7 +107,7 @@ public class GUIManager : MonoBehaviour {
 	}
 	private void generateMap(){
 		GameMap.CreateMap();
-		short[,] tempMap = GameMap.GameMapArray;
+		int[,] tempMap = GameMap.GameMapArray;
 
 		GameObject wallO = GameObject.Find("Wall");
 		for(int i = 0; i < 100 ; i++){
@@ -112,7 +123,7 @@ public class GUIManager : MonoBehaviour {
 		
 	}
 
-	private short[,] checkJail(short[,] tempMap, int i, int j){
+	private int[,] checkJail(int[,] tempMap, int i, int j){
 		if(tempMap[i + 1, j] == 3){
 			for(int k = 1 ; k < 6; k++){
 				tempMap[i + k, j] = 0;

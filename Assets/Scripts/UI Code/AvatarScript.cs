@@ -38,7 +38,7 @@ public class AvatarScript : MonoBehaviour {
 	CharacterController controller;
 	CollisionFlags collisionFlags;
 	bool isGrounded;
-	short previousX, previousY;
+	float previousX, previousY;
 
 	void Start (){
 		// must have both!
@@ -67,10 +67,10 @@ public class AvatarScript : MonoBehaviour {
 	
 	void GameStart() {
 		gameObject.SetActive(true);	
-		previousX = GameEngine.player.LocationX;
-		previousY = GameEngine.player.LocationY;
-		//GameEngine.setPlayerPosition((short)(GameEngine.guards[0].LocationX + 1), (short)(GameEngine.guards[0].LocationY+1));
-		transform.position = ConvertLocation.ConvertToReal(previousX, transform.localPosition.y, previousY);
+		previousX = (float)GameEngine.player.LocationX;
+		previousY = (float)GameEngine.player.LocationY;
+		//GameEngine.setPlayerPosition((GameEngine.guards[0].LocationX + 1), (GameEngine.guards[0].LocationY+1));
+		transform.position = ConvertLocation.ConvertToReal((int)previousX, transform.localPosition.y, (int)previousY);
 		transform.rotation = initialRotation;		
 		
 		collisionFlags = CollisionFlags.None;
@@ -126,9 +126,9 @@ public class AvatarScript : MonoBehaviour {
 			this.transform.Rotate(new Vector3(0,inputRotate*rotateSpeed*Time.deltaTime,0));
 			collisionFlags = controller.Move(moveVector+new Vector3(0,-gravity*Time.deltaTime,0));
 			Vector2 temp = ConvertLocation.ConvertTo2D(transform.localPosition);
-			if(previousX != (short)temp.x || previousY != (short)temp.y){
-				previousX = (short)temp.x; previousY = (short) temp.y;
-				GameEngine.setPlayerPosition(previousX, previousY);
+			if(previousX != temp.x || previousY != temp.y){
+				previousX = temp.x; previousY = temp.y;
+				GameEngine.setPlayerPosition((int)previousX, (int)previousY);
 			}
 		}
 		

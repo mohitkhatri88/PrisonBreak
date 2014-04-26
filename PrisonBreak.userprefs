@@ -1,12 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameCode/GameDebugger.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameCode\ReinforcementLearner.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameCode/GameEngine.cs" Line="441" Column="42" />
-      <File FileName="Assets/Scripts/GameCode/GameConstants.cs" Line="61" Column="34" />
-      <File FileName="Assets/Scripts/GameCode/ReinforcementLearner.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameCode/GameDebugger.cs" Line="6" Column="25" />
-      <File FileName="Assets/Scripts/UI Code/GUIManager.cs" Line="22" Column="10" />
+      <File FileName="Assets\Scripts\GameCode\ReinforcementLearner.cs" Line="72" Column="6" />
+      <File FileName="Assets\Scripts\GameCode\GameEngine.cs" Line="106" Column="35" />
+      <File FileName="Assets\Scripts\GameCode\CellmateAgent.cs" Line="12" Column="22" />
+      <File FileName="Assets\Scripts\GameCode\GameConstants.cs" Line="118" Column="1" />
+      <File FileName="Assets\Scripts\GameCode\GameMap.cs" Line="49" Column="4" />
+      <File FileName="Assets\Scripts\GameCode\TurningFloorCell.cs" Line="35" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

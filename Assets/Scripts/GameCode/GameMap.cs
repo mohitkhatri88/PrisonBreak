@@ -9,7 +9,7 @@ using System.IO;
 [System.Serializable]
 public static class GameMap {
 	/* Contains 2D floor cells with type values (0, 2, 3, ????) */
-	public static short[,] GameMapArray;
+	public static int[,] GameMapArray;
 
 	/* Contains distance each floor cell is to the exit (key: hash value of floor cell, value: distance to exit) */
 	public static Dictionary<int, int> FloorCellToExitDistanceMap;
@@ -18,7 +18,7 @@ public static class GameMap {
 	 * Creates map info
 	 */
 	public static void CreateMap() {
-		GameMapArray = new short[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
+		GameMapArray = new int[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		FloorCellToExitDistanceMap = new Dictionary<int, int>();
 		// Map size (dimensions) - GameConstants class
 		// Floor cell size (dimensions) - GameConstants class
@@ -35,7 +35,7 @@ public static class GameMap {
 			Debug.Log (source.Length);
 			while(source != null){
 				for(int j = 0; j < source.Length; j++){
-					GameMapArray[index,j] = (short)char.GetNumericValue(source[j]);
+					GameMapArray[index,j] = (int)char.GetNumericValue(source[j]);
 				}
 				index++;
 				source = sr.ReadLine();
@@ -51,7 +51,7 @@ public static class GameMap {
 	 * 
 	 * TODO: does this need to return a long?
 	 */
-	public static ulong HashFloorCell(short locationX, short locationY) {
+	public static ulong HashFloorCell(int locationX, int locationY) {
 		//Getting the hash value for the given location. 
 		return (ulong)(((ulong)locationX)*((ulong)27191) + ((ulong)locationY);
 	}

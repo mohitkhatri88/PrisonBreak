@@ -6,19 +6,19 @@ using System.Collections;
  */
 public class GameAgent {
 	/* x coordinate in GameMap GameMapArray */
-	public short LocationX { get; set; }
+	public int LocationX { get; set; }
 
 	/* y coordinate in GameMap GameMapArray */
-	public short LocationY { get; set; }
+	public int LocationY { get; set; }
 
 	/* Unique value that identifies Agent */
-	public short AgentId { get; set; }
+	public int AgentId { get; set; }
 
 	/* Direction Agent is moving */
-	public short MovingDirection { get; set; }
+	public int MovingDirection { get; set; }
 
 	/* Checks whether Agent is active in the game */
-	public short Alive { get; set; }
+	public int Alive { get; set; }
 
 	/*
 	 * Updates Agent's state in the world
@@ -30,7 +30,7 @@ public class GameAgent {
 	/*
 	 * Gets xy position in GameMap GameMapArray
 	 */
-	public short[] GetLocation() {
+	public int[] GetLocation() {
 		return null;
 	}
 }

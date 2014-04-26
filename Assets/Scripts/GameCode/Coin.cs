@@ -8,10 +8,10 @@ using System.Collections.Generic;
  */
 public class Coin {
 	/* x coordinate in GameMap GameMapArray */
-	public short LocationX { get; set; }
+	public int LocationX { get; set; }
 
 	/* y coordinate in GameMap GameMapArray */
-	public short LocationY { get; set; }
+	public int LocationY { get; set; }
 
 	/* Tracks whether or not coin has been collected by PlayerAgent */
 	public bool Collected { get; set; }

@@ -13,7 +13,7 @@ public class CellmateAgent : GameAgent {
 	}
 
 	public void updateLocation() {
-		short nextDirection = GameEngine.learner.UpdateLearner ();
+		int nextDirection = GameEngine.learner.UpdateLearner ();
 		if (nextDirection == GameConstants.Left) {
 			this.LocationX--;
 		} else if (nextDirection == GameConstants.Right) {
