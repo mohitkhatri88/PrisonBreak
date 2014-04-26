@@ -16,7 +16,7 @@ public class ReinforcementLearner {
 	ulong PrevTurnFloorCellIndex{ get; set; }
 
 	/* Previous turn direction that Agent has taken */
-	public short PrevDirectionTaken { get; set; }
+	public int PrevDirectionTaken { get; set; }
 
 	/* Ones represent floor cells Agent has walked on */
 	public byte[] CellmateExploredMap { get; set; }
@@ -27,7 +27,7 @@ public class ReinforcementLearner {
 	/*variable to keep the value for the epsilon.*/
 	public double epsilon;
 
-	/*Short value to set the learning rate.*/
+	/*int value to set the learning rate.*/
 	public double learningRate;
 	/*
 	 * ReinforcementLearner constructor 
@@ -43,12 +43,12 @@ public class ReinforcementLearner {
 	/*
 	 * Updates Agents knowledge of the environment
 	 */
-	public short UpdateLearner() {
+	public int UpdateLearner() {
 		/*
 		 * Keeping the next direction to be previous. 
 		 * In case, we dont reach the middle, we just have to keep stepping like before
 		 */
-		short nextDirection = this.PrevDirectionTaken;
+		int nextDirection = this.PrevDirectionTaken;
 		/*
 		//Check to see if we should change direction. 
 		if (this.shouldChangeDirection(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
@@ -82,9 +82,9 @@ public class ReinforcementLearner {
 		return this.PrevDirectionTaken;
 	}
 
-	public short getBestDirection(TurningFloorCell turnCell) {
+	public int getBestDirection(TurningFloorCell turnCell) {
 		//Compare probabilities of all the directions to see which one is best. 
-		short nextDirection = GameConstants.Left;
+		int nextDirection = GameConstants.Left;
 		double bestProbability = turnCell.LeftCornerProbability;
 		if (turnCell.DownCornerProbability >= bestProbability) {
 			nextDirection = GameConstants.Down;
@@ -105,7 +105,7 @@ public class ReinforcementLearner {
 	 * Check to see if the current cell is a turning cell. 
 	 * TODO: How to check if prison cell is open, and how to get into it. 
 	 */
-	public bool isTurnCell(short locationX, short locationY) {
+	public bool isTurnCell(int locationX, int locationY) {
 		bool isTurnCell = false;
 		//Number of Possible turns. 
 		int nextCell = GameConstants.MapHeightPixels/2 + 1;
@@ -135,7 +135,7 @@ public class ReinforcementLearner {
 	/*
 	 * You should always consider changing direction when reaching the middle of a cell. Keeps thing's consistent. 
 	 */
-	public bool shouldChangeDirection(short locationX, short locationY) {
+	public bool shouldChangeDirection(int locationX, int locationY) {
 		bool result = false;
 		int cellCenter = GameConstants.MapHeightPixels / 2;
 		int modX = (locationX - cellCenter) % GameConstants.TurningFloorCellWidthPixels;
@@ -146,7 +146,7 @@ public class ReinforcementLearner {
 		return result;
 	}
 
-	public short GetNextDirection() {
+	public int GetNextDirection() {
 		//Compare the values for the current location of the cellmate. I assume this comes from the cellmate agent class. 
 		return GameConstants.Left;
 	}
@@ -154,9 +154,9 @@ public class ReinforcementLearner {
 	/*
 	 * Gets new location and directionfor cellmate
 	 */
-	public short[] GetNextLocationWithDirection(short currentLocationX, short currentLocationY) {
+	public int[] GetNextLocationWithDirection(int currentLocationX, int currentLocationY) {
 		// TODO: change
-		short[] location = new short[3];
+		int[] location = new int[3];
 		// location[0] is x
 		// location[1] is y
 		// location[2] is direction

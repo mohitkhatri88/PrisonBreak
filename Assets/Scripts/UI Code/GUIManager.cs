@@ -102,7 +102,7 @@ public class GUIManager : MonoBehaviour {
 	}
 	private void generateMap(){
 		GameMap.CreateMap();
-		short[,] tempMap = GameMap.GameMapArray;
+		int[,] tempMap = GameMap.GameMapArray;
 
 		GameObject wallO = GameObject.Find("Wall");
 		for(int i = 0; i < 100 ; i++){
@@ -118,7 +118,7 @@ public class GUIManager : MonoBehaviour {
 		
 	}
 
-	private short[,] checkJail(short[,] tempMap, int i, int j){
+	private int[,] checkJail(int[,] tempMap, int i, int j){
 		if(tempMap[i + 1, j] == 3){
 			for(int k = 1 ; k < 6; k++){
 				tempMap[i + k, j] = 0;

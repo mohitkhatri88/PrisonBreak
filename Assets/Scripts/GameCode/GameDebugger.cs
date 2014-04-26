@@ -11,7 +11,7 @@ public static class GameDebugger {
 	/*
 	 * Prints array data (mainly used for Particle Filtering probability array data)
 	 */
-	public static void PrintArray(long gameStepNumber, string arrayDescription, short[,] data){
+	public static void PrintArray(long gameStepNumber, string arrayDescription, int[,] data){
 		if (GameConstants.GameDebuggerOn) {
 			StringBuilder sb = new StringBuilder();
 			sb.Append("<br />"+arrayDescription+", Game Step #"+gameStepNumber+":");

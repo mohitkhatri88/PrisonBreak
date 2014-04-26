@@ -17,30 +17,30 @@ public static class GameEngine {
 	public static List<RatAgent> rats = new List<RatAgent>();
 
 	public static List<Coin> coins = new List<Coin>();
-	public static short RemainingCellmateLives { get; set; }
-	public static short RemainingSpeedBoostSeconds { get; set; }
-	public static short GuardsAvoided  { get; set; }
-	public static short NumberOfPlayerDeaths { get; set; }
-	public static short NumberOfgamesPlayed  { get; set; }
-	public static short NumberOfCoinsCollected { get; set; }
+	public static int RemainingCellmateLives { get; set; }
+	public static int RemainingSpeedBoostSeconds { get; set; }
+	public static int GuardsAvoided  { get; set; }
+	public static int NumberOfPlayerDeaths { get; set; }
+	public static int NumberOfgamesPlayed  { get; set; }
+	public static int NumberOfCoinsCollected { get; set; }
 
 	// pcg values
-	public static short NumberOfPrisonCells_PCG { get; set; }
-	public static short NumberOfOpenPrisonCells_PCG { get; set; }
-	public static short NumberOfCoins_PCG { get; set; }
-	public static short NumberOfCoinsRequiredToWin_PCG { get; set; }
-	public static short PlayerPixelStartDistanceFromExit_PCG { get; set; }
-	public static short NumberOfCellmateLives_PCG { get; set; }
-	public static short NumberOfGuards_PCG { get; set; }
-	public static short SpeedBoostSeconds_PCG { get; set; }
-	public static short NumberOfFloorSensors_PCG { get; set; }
-	public static short NumberOfRats_PCG { get; set; }
+	public static int NumberOfPrisonCells_PCG { get; set; }
+	public static int NumberOfOpenPrisonCells_PCG { get; set; }
+	public static int NumberOfCoins_PCG { get; set; }
+	public static int NumberOfCoinsRequiredToWin_PCG { get; set; }
+	public static int PlayerPixelStartDistanceFromExit_PCG { get; set; }
+	public static int NumberOfCellmateLives_PCG { get; set; }
+	public static int NumberOfGuards_PCG { get; set; }
+	public static int SpeedBoostSeconds_PCG { get; set; }
+	public static int NumberOfFloorSensors_PCG { get; set; }
+	public static int NumberOfRats_PCG { get; set; }
 
 
 	// pcg helper values
-	public static short AvgNumberOfCoinsPlaced { get; set; }
-	public static short AvgNumberOfCoinsCollected { get; set; }
-	public static short TotalTimesPlayerInPrisonCell  { get; set; }
+	public static int AvgNumberOfCoinsPlaced { get; set; }
+	public static int AvgNumberOfCoinsCollected { get; set; }
+	public static int TotalTimesPlayerInPrisonCell  { get; set; }
 	public static bool PlayerPrevInPrisonCell { get; set; }
 
 
@@ -77,21 +77,21 @@ public static class GameEngine {
 		System.Random random = new System.Random();
 		bool playerPositionFound = false;
 
-		short[] up = new short[2];
-		up [0] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
-		up [1] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		int[] up = new int[2];
+		up [0] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		up [1] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
 
-		short[] down = new short[2];
-		down [0] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
-		down [1] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		int[] down = new int[2];
+		down [0] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		down [1] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
 
-		short[] right = new short[2];
-		right [0] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
-		right [1] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		int[] right = new int[2];
+		right [0] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		right [1] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
 
-		short[] left = new short[2];
-		left [0] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
-		left [1] = (short)(random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		int[] left = new int[2];
+		left [0] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
+		left [1] = (random.Next (0, 6) + PlayerPixelStartDistanceFromExit_PCG);
 
 
 		while (!playerPositionFound) {
@@ -113,10 +113,10 @@ public static class GameEngine {
 				playerPositionFound = true;
 			}
 
-			up[1] = (short)(up[1]+(short)1);
-			down[1] = (short)(down[1]-(short)1);
-			right[1] = (short)(right[0]+(short)1);
-			left[1] = (short)(left[0]-(short)1);
+			up[1] = (up[1]+(int)1);
+			down[1] = (down[1]-(int)1);
+			right[1] = (right[0]+(int)1);
+			left[1] = (left[0]-(int)1);
 		}
 
 		// set player alive and id
@@ -128,14 +128,14 @@ public static class GameEngine {
 		cellmate.LocationY = player.LocationY;
 		cellmate.AgentId = GameConstants.CellmateAgentId;
 		cellmate.Alive = 1;
-		cellmate.MovingDirection = (short)random.Next (0,4);
+		cellmate.MovingDirection = random.Next (0,4);
 */
 		// set guards
 		for (int i = 0; i<NumberOfGuards_PCG; i++) {
 			GuardAgent guard = new GuardAgent();
 			guard.AgentId = GameConstants.GuardAgentId;
 			guard.Alive = 1;
-			guard.MovingDirection = (short)random.Next (0,4);
+			guard.MovingDirection = random.Next (0,4);
 
 			switch (random.Next(0,4)) {
 				case 0:
@@ -152,9 +152,9 @@ public static class GameEngine {
 
 			bool guardPosFound = false;
 			while (!guardPosFound) {
-				short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
-				short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
-				short distance = (short)Math.Sqrt (((xCoord-player.LocationX)*(xCoord-player.LocationX))+((yCoord-player.LocationY)*(yCoord-player.LocationY)));
+				int xCoord = random.Next (0,GameConstants.MapWidthPixels);
+				int yCoord = random.Next (0,GameConstants.MapHeightPixels);
+				double distance = Math.Sqrt (((xCoord-player.LocationX)*(xCoord-player.LocationX))+((yCoord-player.LocationY)*(yCoord-player.LocationY)));
 
 				if(distance > GameConstants.GuardStartDistanceFromPlayer && GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 					guard.LocationX = xCoord;
@@ -171,12 +171,12 @@ public static class GameEngine {
 			RatAgent rat = new RatAgent();
 			rat.AgentId = GameConstants.RatAgentId;
 			rat.Alive = 1;
-			rat.MovingDirection = (short)random.Next (0,4);
+			rat.MovingDirection = random.Next (0,4);
 			
 			bool ratPosFound = false;
 			while (!ratPosFound) {
-				short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
-				short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
+				int xCoord = random.Next (0,GameConstants.MapWidthPixels);
+				int yCoord = random.Next (0,GameConstants.MapHeightPixels);
 
 				if(GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 					rat.LocationX = xCoord;
@@ -190,10 +190,10 @@ public static class GameEngine {
 
 
 		// add floor sensors
-		short numberOfFloorSensorsPlace = 0;
+		int numberOfFloorSensorsPlace = 0;
 		while (numberOfFloorSensorsPlace < NumberOfFloorSensors_PCG) {
-			short xCoord = (short)random.Next (0,GameConstants.MapWidthPixels);
-			short yCoord = (short)random.Next (0,GameConstants.MapHeightPixels);
+			int xCoord = random.Next (0,GameConstants.MapWidthPixels);
+			int yCoord = random.Next (0,GameConstants.MapHeightPixels);
 
 			if (GameMap.GameMapArray[xCoord,yCoord]==GameConstants.MapHallwayFloorcell) {
 				++numberOfFloorSensorsPlace;
@@ -214,7 +214,7 @@ public static class GameEngine {
 		}
 	}
 
-	public static void setPlayerPosition(short locationX, short locationY) {
+	public static void setPlayerPosition(int locationX, int locationY) {
 		player.LocationX = locationX;
 		player.LocationY = locationY;
 	}
@@ -237,26 +237,26 @@ public static class GameEngine {
 
 	private static bool UpdateGameEnvironment () {
 		// lowest distance Player is to Guard
-		short lowestPlayeristanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
+		double lowestPlayeristanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
 
 		// update cellmate (location updated in reinforcement leaner)
-		short lowestCellmateDistanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
+		double lowestCellmateDistanceToGuard = GameConstants.GuardStartDistanceFromPlayer + 10;
 
 
 		// update guards
 		// TODO: add guard speeds
 		for (int i = 0; i<guards.Count; i++) {
-			short[] newLocation = estimator.GetGuardTargetLocation(guards[i]);
+			int[] newLocation = estimator.GetGuardTargetLocation(guards[i]);
 
-			short newX = newLocation[0];
-			short newY = newLocation[1];
-			short oldX = guards[i].LocationX;
-			short oldY = guards[i].LocationY;
+			int newX = newLocation[0];
+			int newY = newLocation[1];
+			int oldX = guards[i].LocationX;
+			int oldY = guards[i].LocationY;
 
-			short distanceUp = (short)Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY+1-oldY)*(newY+1-oldY)));
-			short distanceDown = (short)Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-1-oldY)*(newY-1-oldY)));
-			short distanceLeft = (short)Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
-			short distanceRight = (short)Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
+			double distanceUp = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY+1-oldY)*(newY+1-oldY)));
+			double distanceDown = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-1-oldY)*(newY-1-oldY)));
+			double distanceLeft = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
+			double distanceRight = Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
 
 
 			bool canGoUp = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
@@ -271,7 +271,7 @@ public static class GameEngine {
 					guards[i].LocationY += 1;
 					locationSet = true;
 				} else {
-					distanceUp = (short)(32000);
+					distanceUp = (32000);
 				}
 
 			} else if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight) { // down
@@ -279,7 +279,7 @@ public static class GameEngine {
 					guards[i].LocationY -= 1;
 					locationSet = true;
 				} else {
-					distanceDown = (short)(32000);
+					distanceDown = (32000);
 				}
 
 			} else if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight) { // left
@@ -287,7 +287,7 @@ public static class GameEngine {
 					guards[i].LocationX -= 1;
 					locationSet = true;
 				} else {
-					distanceLeft = (short)(32000);
+					distanceLeft = (32000);
 				}
 
 			} else if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft) { // right
@@ -295,7 +295,7 @@ public static class GameEngine {
 					guards[i].LocationX += 1;
 					locationSet = true;
 				} else {
-					distanceRight = (short)(32000);
+					distanceRight = (32000);
 				}
 
 			}
@@ -306,19 +306,19 @@ public static class GameEngine {
 
 
 			// lowest cellmate to guard distance
-			short gLocationX = guards[i].LocationX;
-			short gLocationY = guards[i].LocationY;
-			/*short cLocationX = cellmate.LocationX;
-			short cLocationY = cellmate.LocationY;
-			short cellmateToGuardDistance = (short)Math.Sqrt (((gLocationX-cLocationX)*(gLocationX-cLocationX))+((gLocationY-cLocationY)*(gLocationY-cLocationY)));;
+			int gLocationX = guards[i].LocationX;
+			int gLocationY = guards[i].LocationY;
+			/*int cLocationX = cellmate.LocationX;
+			int cLocationY = cellmate.LocationY;
+			int cellmateToGuardDistance = Math.Sqrt (((gLocationX-cLocationX)*(gLocationX-cLocationX))+((gLocationY-cLocationY)*(gLocationY-cLocationY)));;
 			if (lowestCellmateDistanceToGuard > cellmateToGuardDistance) {
 				lowestCellmateDistanceToGuard = cellmateToGuardDistance;
 			}*/
 
 			// lowest player to guard sitance
-			short pLocationX = player.LocationX;
-			short pLocationY = player.LocationY;
-			short playerToGuardDistance = (short)Math.Sqrt (((gLocationX-pLocationX)*(gLocationX-pLocationX))+((gLocationY-pLocationY)*(gLocationY-pLocationY)));;
+			int pLocationX = player.LocationX;
+			int pLocationY = player.LocationY;
+			double playerToGuardDistance = Math.Sqrt (((gLocationX-pLocationX)*(gLocationX-pLocationX))+((gLocationY-pLocationY)*(gLocationY-pLocationY)));;
 			if (lowestPlayeristanceToGuard > playerToGuardDistance) {
 				lowestPlayeristanceToGuard = playerToGuardDistance;
 			}
@@ -330,7 +330,7 @@ public static class GameEngine {
 		// update rats
 		/*System.Random random = new System.Random ();
 		for (int i = 0; i<rats.Count; i++) {
-			short direction = (short)random.Next(0,4);
+			int direction = random.Next(0,4);
 
 			bool canGoUp = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
 			bool canGoDown = GameMap.GameMapArray[rats[i].LocationX,rats[i].LocationY-1] == GameConstants.MapHallwayFloorcell;
@@ -409,7 +409,7 @@ public static class GameEngine {
 
 
 		// set number of prison cells open
-		NumberOfOpenPrisonCells_PCG = (short)(NumberOfPrisonCells_PCG * (TotalTimesPlayerInPrisonCell/(NumberOfPrisonCells_PCG*NumberOfgamesPlayed)));
+		NumberOfOpenPrisonCells_PCG = (NumberOfPrisonCells_PCG * (TotalTimesPlayerInPrisonCell/(NumberOfPrisonCells_PCG*NumberOfgamesPlayed)));
 		if (NumberOfOpenPrisonCells_PCG > NumberOfPrisonCells_PCG) {
 			NumberOfOpenPrisonCells_PCG = NumberOfPrisonCells_PCG;
 		} else if (NumberOfOpenPrisonCells_PCG < 5) {
@@ -417,54 +417,54 @@ public static class GameEngine {
 		}
 
 		// set number of coins placed
-		AvgNumberOfCoinsCollected = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + NumberOfCoinsCollected)/(NumberOfgamesPlayed));
-		AvgNumberOfCoinsPlaced = (short)(((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + coins.Count)/(NumberOfgamesPlayed));
-		NumberOfCoins_PCG = (short)((AvgNumberOfCoinsCollected / AvgNumberOfCoinsPlaced) * GameConstants.NumberOfHallwayFloorTiles);
-		NumberOfCoinsRequiredToWin_PCG = (short)(NumberOfCoins_PCG*.75);
+		AvgNumberOfCoinsCollected = (((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + NumberOfCoinsCollected)/(NumberOfgamesPlayed));
+		AvgNumberOfCoinsPlaced = (((AvgNumberOfCoinsCollected * (NumberOfgamesPlayed)) + coins.Count)/(NumberOfgamesPlayed));
+		NumberOfCoins_PCG = ((AvgNumberOfCoinsCollected / AvgNumberOfCoinsPlaced) * GameConstants.NumberOfHallwayFloorTiles);
+		NumberOfCoinsRequiredToWin_PCG = (int)(NumberOfCoins_PCG*.75);
 
 		// TODO: use game time somehow
 		// set distance from exit
-		short dieWinDiff = (short)((NumberOfgamesPlayed/2)-NumberOfPlayerDeaths);
-		if (dieWinDiff < (short)0) {
-			PlayerPixelStartDistanceFromExit_PCG = (short)(50-(10*dieWinDiff));
+		int dieWinDiff = ((NumberOfgamesPlayed/2)-NumberOfPlayerDeaths);
+		if (dieWinDiff < 0) {
+			PlayerPixelStartDistanceFromExit_PCG = (50-(10*dieWinDiff));
 		} else {
-			PlayerPixelStartDistanceFromExit_PCG = (short)(50+(10*dieWinDiff));
+			PlayerPixelStartDistanceFromExit_PCG = (50+(10*dieWinDiff));
 		}
 
 		// TODO: how do we use Percentage of cellmate route explored?
 		// set number of cellmate lives
 		if (isGameWin) {
-			NumberOfCellmateLives_PCG -= (short)1;
+			NumberOfCellmateLives_PCG -= 1;
 		} else {
-			NumberOfCellmateLives_PCG += (short)1;
+			NumberOfCellmateLives_PCG += 1;
 		}
 
 		// set number of guards
 		if (isGameWin) {
-			NumberOfGuards_PCG -= (short)5;
+			NumberOfGuards_PCG -= 5;
 		} else {
-			NumberOfGuards_PCG += (short)5;
+			NumberOfGuards_PCG += 5;
 		}
 
 		// set amount of speed boost
 		if (isGameWin) {
-			SpeedBoostSeconds_PCG += (short)3;
+			SpeedBoostSeconds_PCG += 3;
 		} else {
-			SpeedBoostSeconds_PCG -= (short)3;
+			SpeedBoostSeconds_PCG -= 3;
 		}
 
 		// set number of floor sensors
 		if (isGameWin) {
-			NumberOfFloorSensors_PCG += (short)(NumberOfFloorSensors_PCG*.15);
+			NumberOfFloorSensors_PCG += (int)(NumberOfFloorSensors_PCG*.15);
 		} else {
-			NumberOfFloorSensors_PCG -= (short)(NumberOfFloorSensors_PCG*.15);
+			NumberOfFloorSensors_PCG -= (int)(NumberOfFloorSensors_PCG*.15);
 		}
 
 		// set number of rats
 		if (isGameWin) {
-			NumberOfRats_PCG += (short)(NumberOfRats_PCG*.05);
+			NumberOfRats_PCG += (int)(NumberOfRats_PCG*.05);
 		} else {
-			NumberOfRats_PCG += (short)(NumberOfRats_PCG*.05);
+			NumberOfRats_PCG += (int)(NumberOfRats_PCG*.05);
 		}
 
 		

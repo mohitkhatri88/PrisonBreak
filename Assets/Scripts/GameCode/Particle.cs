@@ -6,25 +6,25 @@ using System.Collections;
  */
 public class Particle {
 	/* Direction particle is moving */
-	public short MovingDirection { get; set; }
+	public int MovingDirection { get; set; }
 
 	/* x coordinate in GameMap GameMapArray */
-	public short CurrentLocationX { get; set; }
+	public int CurrentLocationX { get; set; }
 
 	/* y coordinate in GameMap GameMapArray */
-	public short CurrentLocationY { get; set; }
+	public int CurrentLocationY { get; set; }
 
 	/* Value given based on if PlayerAgent or RatAgent created particle */
-	public short ParticleValue { get; set; }
+	public int ParticleValue { get; set; }
 
 	/* Number of game steps until partile dies */
-	public short TimeToLive { get; set; }
+	public int TimeToLive { get; set; }
 
 	/* Checks whether particle was created during current game step */
 	public bool JustCreated { get; set; }
 
-	public Particle(short MovingDirection, short CurrentLocationX, short CurrentLocationY,
-	                short ParticleValue, short TimeToLive, bool JustCreated){
+	public Particle(int MovingDirection, int CurrentLocationX, int CurrentLocationY,
+	                int ParticleValue, int TimeToLive, bool JustCreated){
 
 		this.MovingDirection = MovingDirection;
 		this.CurrentLocationX = CurrentLocationX;

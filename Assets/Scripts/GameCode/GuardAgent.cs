@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class GuardAgent : GameAgent {
 
 	/* Guard speed */
-	public short Speed { get; set; }
+	public int Speed { get; set; }
 
 }
 

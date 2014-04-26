@@ -19,18 +19,18 @@ public class TurningFloorCell {
 	public double UpCornerProbability { get; set; }
 
 	/* x coordinate in GameMap GameMapArray */
-	public short LocationX { get; set; }
+	public int LocationX { get; set; }
 
 	/* y coordinate in GameMap GameMapArray */
-	public short LocationY { get; set; }
+	public int LocationY { get; set; }
 
 	/* unique value that identifies floor cell */
-	public short FloorCellIndex { get; set; }
+	public int FloorCellIndex { get; set; }
 
 	/* unique hash value that can be used to index List<> and Ditionary<> */
 	public int HashValue { get; set; }
 
-	public TurningFloorCell(short locationX, short locationY) {
+	public TurningFloorCell(int locationX, int locationY) {
 		this.LocationX = locationX;
 		this.LocationY = locationY;
 		this.LeftCornerProbability = 0.25;
