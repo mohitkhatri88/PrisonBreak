@@ -14,6 +14,7 @@ public class GUIManager : MonoBehaviour {
 	private List<Coin> coinObjects = new List<Coin>();
 	private float startTime;
 	private float endTime;
+	GameObject cellmateO;
 	
 	void Start () {
 		// perhaps should check here to make sure only one?
@@ -64,7 +65,7 @@ public class GUIManager : MonoBehaviour {
 		/* Making of Coins and intialize their position from Game Engine */
 		startTime = Time.time;
 
-		GameObject cellmateO = GameOver.Find("CellMate");
+		cellmateO = GameObject.Find("CellMate");
 		cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 	}
 	
