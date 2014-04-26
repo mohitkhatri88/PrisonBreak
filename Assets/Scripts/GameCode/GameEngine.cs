@@ -224,6 +224,7 @@ public static class GameEngine {
 		estimator.UpdateEstimator ();
 
 		// update cellmate knowledge
+		cellmate.updateLocation ();
 		//learner.UpdateLearner ();
 
 		// update game enviornment

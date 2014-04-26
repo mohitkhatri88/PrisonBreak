@@ -7,16 +7,16 @@ using System.Collections.Generic;
  */
 public class TurningFloorCell {
 	/* probability of agent taking left corner */
-	public short LeftCornerProbability { get; set; }
+	public double LeftCornerProbability { get; set; }
 
 	/* probability of agent taking down corner */
-	public short DownCornerProbability { get; set; }
+	public double DownCornerProbability { get; set; }
 
 	/* probability of agent taking right corner */
-	public short RightCornerProbability { get; set; }
+	public double RightCornerProbability { get; set; }
 
 	/* probability of agent taking up corner */
-	public short UpCornerProbability { get; set; }
+	public double UpCornerProbability { get; set; }
 
 	/* x coordinate in GameMap GameMapArray */
 	public short LocationX { get; set; }
@@ -29,5 +29,14 @@ public class TurningFloorCell {
 
 	/* unique hash value that can be used to index List<> and Ditionary<> */
 	public int HashValue { get; set; }
+
+	public TurningFloorCell(short locationX, short locationY) {
+		this.LocationX = locationX;
+		this.LocationY = locationY;
+		this.LeftCornerProbability = 0.25;
+		this.RightCornerProbability = 0.25;
+		this.UpCornerProbability = 0.25;
+		this.DownCornerProbability = 0.25;
+	}
 }
 
