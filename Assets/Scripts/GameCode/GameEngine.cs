@@ -124,8 +124,8 @@ public static class GameEngine {
 		player.Alive = 1;
 
 		// set cellmate
-		cellmate.LocationX = player.LocationX;
-		cellmate.LocationY = player.LocationY;
+		//cellmate.LocationX = player.LocationX;
+		//cellmate.LocationY = player.LocationY;
 		cellmate.AgentId = GameConstants.CellmateAgentId;
 		cellmate.Alive = 1;
 		cellmate.MovingDirection = (short)random.Next (0,4);
@@ -224,7 +224,8 @@ public static class GameEngine {
 		estimator.UpdateEstimator ();
 
 		// update cellmate knowledge
-		learner.UpdateLearner ();
+		cellmate.updateLocation ();
+		//learner.UpdateLearner ();
 
 		// update game enviornment
 		bool result = UpdateGameEnvironment ();
