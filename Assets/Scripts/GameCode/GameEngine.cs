@@ -70,7 +70,7 @@ public static class GameEngine {
 		}
 
 		// create game map
-		GameMap.CreateMap ();
+		//GameMap.CreateMap ();
 		// TODO: are all maps initialized?
 
 		// Create agents
@@ -124,12 +124,12 @@ public static class GameEngine {
 		player.Alive = 1;
 
 		// set cellmate
-		//cellmate.LocationX = player.LocationX;
-		//cellmate.LocationY = player.LocationY;
+		/*cellmate.LocationX = player.LocationX;
+		cellmate.LocationY = player.LocationY;
 		cellmate.AgentId = GameConstants.CellmateAgentId;
 		cellmate.Alive = 1;
 		cellmate.MovingDirection = (short)random.Next (0,4);
-
+*/
 		// set guards
 		for (int i = 0; i<NumberOfGuards_PCG; i++) {
 			GuardAgent guard = new GuardAgent();
@@ -231,7 +231,8 @@ public static class GameEngine {
 		bool result = UpdateGameEnvironment ();
 
 		// return game over condition
-		return result;
+		//return result;
+		return true;
 	}
 
 	private static bool UpdateGameEnvironment () {
@@ -307,28 +308,27 @@ public static class GameEngine {
 			// lowest cellmate to guard distance
 			short gLocationX = guards[i].LocationX;
 			short gLocationY = guards[i].LocationY;
-			short cLocationX = cellmate.LocationX;
+			/*short cLocationX = cellmate.LocationX;
 			short cLocationY = cellmate.LocationY;
 			short cellmateToGuardDistance = (short)Math.Sqrt (((gLocationX-cLocationX)*(gLocationX-cLocationX))+((gLocationY-cLocationY)*(gLocationY-cLocationY)));;
 			if (lowestCellmateDistanceToGuard > cellmateToGuardDistance) {
 				lowestCellmateDistanceToGuard = cellmateToGuardDistance;
-			}
+			}*/
 
 			// lowest player to guard sitance
-			short pLocationX = cellmate.LocationX;
-			short pLocationY = cellmate.LocationY;
+			short pLocationX = player.LocationX;
+			short pLocationY = player.LocationY;
 			short playerToGuardDistance = (short)Math.Sqrt (((gLocationX-pLocationX)*(gLocationX-pLocationX))+((gLocationY-pLocationY)*(gLocationY-pLocationY)));;
 			if (lowestPlayeristanceToGuard > playerToGuardDistance) {
 				lowestPlayeristanceToGuard = playerToGuardDistance;
 			}
-
 
 			// guard doesn't need direction and guards stay in same place if it doesn't find best direction
 		}
 
 
 		// update rats
-		System.Random random = new System.Random ();
+		/*System.Random random = new System.Random ();
 		for (int i = 0; i<rats.Count; i++) {
 			short direction = (short)random.Next(0,4);
 
@@ -356,13 +356,13 @@ public static class GameEngine {
 			if (estimator.IsFloorSensorAtLocation(rats[i].LocationX, rats[i].LocationY)) {
 				estimator.CreateParticle(GameConstants.RatAgentId, rats[i].LocationX, rats[i].LocationY);
 			}
-		}
+		}*/
 
 
 		// check if cellmate is caught
-		if (lowestCellmateDistanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
+		/*if (lowestCellmateDistanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			cellmate.Alive = 0;
-		}
+		}*/
 	
 
 		// check if Player is on floor sensor
@@ -371,19 +371,19 @@ public static class GameEngine {
 		}
 
 		// check if Player collected a coin
-		for (int j = 0; j<coins.Count; j++) {
+		/*for (int j = 0; j<coins.Count; j++) {
 			if (Math.Abs (coins[j].LocationX-player.LocationX) < 2 && Math.Abs (coins[j].LocationY-player.LocationY) < 2) {
 				coins[j].Collected = true;
 				++NumberOfCoinsCollected;
 			}
-		}
+		}*/
 
 
 		// check if Player is caught by Guard
-		if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
+		/*if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			player.Alive = 0;
 			return false;
-		}
+		}*/
 
 
 		// TODO: check if Player won - is this correct?

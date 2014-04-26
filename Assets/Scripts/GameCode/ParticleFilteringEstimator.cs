@@ -42,7 +42,7 @@ public class ParticleFilteringEstimator {
 					if (FloorCellProbabilities[x,y] > 0) {
 						FloorCellProbabilities[x,y] = (short)(FloorCellProbabilities[x,y] - 1);
 					}
-				}
+				}	
 			}
 		}
 
