@@ -35,7 +35,7 @@ public class GameConstants {
 	public const short GuardSearchDistancePixels = 25;
 
 	/* Distance that guard can catch PlayerAgent */
-	public const short PlayerCaughtDistancePixels = 10;
+	public const short PlayerCaughtDistancePixels = 1;
 
 	/* Number of pixels on 3D map for every one pixel in 2D GameMap */
 	public const short MapScalePixels = 10;
@@ -92,7 +92,7 @@ public class GameConstants {
 	public const short GameDebuggerGameSteps = 5;
 
 	/* Turns GameDebugger on and off */
-	public const bool GameDebuggerOn = false;
+	public const bool GameDebuggerOn = true;
 
 	/* GuardAgent is same speed as PlayerAgent */
 	public const short GuardSpeedMedium = 0;

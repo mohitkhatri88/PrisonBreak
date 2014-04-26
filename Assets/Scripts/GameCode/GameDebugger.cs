@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 
 /*
@@ -12,18 +13,19 @@ public static class GameDebugger {
 	 */
 	public static void PrintArray(long gameStepNumber, string arrayDescription, short[,] data){
 		if (GameConstants.GameDebuggerOn) {
-			string html = "<br />"+arrayDescription+", Game Step #"+gameStepNumber+":";
-			html += "<table style=\"font-size:10pt\">";
+			StringBuilder sb = new StringBuilder();
+			sb.Append("<br />"+arrayDescription+", Game Step #"+gameStepNumber+":");
+			sb.Append("<table style=\"font-size:10pt\"; border-width:\"1px\";>");
 			for (int i = 0; i<data.GetLength(0); i++) {
-				html += "<tr>";
+				sb.Append("<tr>");
 				for (int j = 0; j<data.GetLength(1); j++) {
-					html += "<td>"+(data[i,j])+"</td>";
+					sb.Append("<td>"+(data[i,j])+"</td>");
 				}
-				html += "</tr>";
+				sb.Append("</tr>");
 			}
-			html += "</table><br /><br />";
+		    sb.Append("</table><br /><br />");
 
-			Debug.Log (html);
+			Debug.Log (sb.ToString ());
 		}
 	}
 

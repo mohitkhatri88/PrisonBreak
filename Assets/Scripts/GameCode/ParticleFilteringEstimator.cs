@@ -11,7 +11,7 @@ public class ParticleFilteringEstimator {
 	public List<Particle> Particles { get; set; }
 
 	/* Probability of PlayerAgent being at a GameMap xy location (noise caused by RatAgents) */
-	public short[,] FloorCellProbabilities { get; set; }
+	public static short[,] FloorCellProbabilities { get; set; }
 
 	/* Contains GameMap positions that contain floor sensors (hash value of floor cell)   */
 	List<ulong> FloorSensors;
