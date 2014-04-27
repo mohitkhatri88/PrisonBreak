@@ -57,14 +57,16 @@ public class ReinforcementLearner {
 		int currentX = GameEngine.cellmate.LocationX;
 		int currentY = GameEngine.cellmate.LocationY;
 		System.Random random = new System.Random();
-
+		GameDebugger.PrintMessage ("Current location : " + currentX + " " + currentY);
 		//Check to see if we should change direction. 
 		if (this.shouldChangeDirection(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
 			/*Check to see if this is a turn cell. 
 			 * If it is, find the best direction, and update the previous direction. 
 			 * Also, create a new turn cell if this one didnt exist. 
 			 */
+			GameDebugger.PrintMessage("Decided to change direction.");
 			if (this.isTurnCell(currentX, currentY)) {
+				GameDebugger.PrintMessage("Its a turn cell.");
 				//Index for the current location. 
 				ulong index = GameMap.HashFloorCell(currentX, currentY);
 
@@ -74,6 +76,7 @@ public class ReinforcementLearner {
 				}
 				//get the next direction that should be chosen. 
 				nextDirection = this.getBestDirectionTurnCell(TurningFloorCellMap[index]);
+				GameDebugger.PrintMessage("Direction chosen :" + nextDirection);
 				//Also, update the previous floor cell with the probabilities based on the current cell.
 				this.updatePreviousTurnCell(index, false);
 
@@ -81,13 +84,17 @@ public class ReinforcementLearner {
 				this.PrevTurnFloorCellIndex = index;
 				this.PrevDirectionTaken = nextDirection;
 			} else {
+				GameDebugger.PrintMessage("Its a freaking normal cell.");
 				//If its not a turning cell, we still might need to change the direction if its a dead end, or if a turn comes in the path. 
 				if (!isDirectionValid(this.PrevDirectionTaken, currentX, currentY)) {
 					nextDirection = this.getBestDirectionNormalCell(this.PrevDirectionTaken, currentX, currentY);
+					this.PrevDirectionTaken = nextDirection;
 				}
+				GameDebugger.PrintMessage("Direction chosen :" + nextDirection);
 			}
 			//Changed the direction. Move on. 
 		} 
+		GameDebugger.PrintMessage("Updated the location and the direction.");
 		return nextDirection;
 	}
 
@@ -97,20 +104,28 @@ public class ReinforcementLearner {
 	 */
 	public bool isDirectionValid(int direction, int currentX, int currentY) {
 		bool result = true;
-		int nextCell = GameConstants.MapHeightPixels/2 + 1;
+		int nextCell = GameConstants.TurningFloorCellHeightPixels/2 + 1;
+		int tempX = currentX;
+		int tempY = currentY;
 		//Update the cell location to that of the new cells starting. 
-		if (this.PrevDirectionTaken == GameConstants.Left) {
-			currentX -= nextCell;
-		} else if (this.PrevDirectionTaken == GameConstants.Right) {
-			currentX += nextCell;
-		} else if (this.PrevDirectionTaken == GameConstants.Up) {
-			currentY += nextCell;
-		} else if (this.PrevDirectionTaken == GameConstants.Down) {
-			currentY -= nextCell;
+		if (direction == GameConstants.Left) {
+			tempY -= nextCell;
+		} else if (direction == GameConstants.Right) {
+			tempY += nextCell;
+		} else if (direction == GameConstants.Up) {
+			tempX -= nextCell;
+		} else if (direction == GameConstants.Down) {
+			tempX += nextCell;
 		}
+		GameDebugger.PrintMessage ("this location to be checked for a valid cell :" + tempX + " " + tempY);
+		try {
 		//Check if this is indeed part of the hallway. 
-		if (GameMap.GameMapArray[currentX, currentY] != GameConstants.MapHallwayFloorcell) {
+			if (GameMap.GameMapArray[tempX, tempY] != GameConstants.MapHallwayFloorcell  && GameMap.GameMapArray[tempX, tempY] != GameConstants.TurningFloorcell) {
 			result = false;
+			GameDebugger.PrintMessage("The previous direction is invalid.");
+		}
+		} catch (IndexOutOfRangeException ee) {
+			GameDebugger.PrintMessage("Error caused due to the location : " + tempX + " " + tempY);
 		}
 		return result;
 	}
@@ -176,8 +191,12 @@ public class ReinforcementLearner {
 		//Compare probabilities of all the directions to see which one is best. 
 		int nextDirection = GameConstants.Left;
 		double bestProbability = 0.0;
+		int invalidDirection = 0;
+		if (this.PrevDirectionTaken == 0 || this.PrevDirectionTaken == 1) {invalidDirection = (int)(this.PrevDirectionTaken + 2);}
+		if (this.PrevDirectionTaken == 2 || this.PrevDirectionTaken == 3) {invalidDirection = (int)(this.PrevDirectionTaken - 2);}
 		for (int i=0;i<4;i++) {
-			if (turnCell.cornerProbabilities[i] >=bestProbability && isDirectionValid(i, turnCell.LocationX, turnCell.LocationY)) {
+
+			if ((i!=invalidDirection) && turnCell.cornerProbabilities[i] >=bestProbability && isDirectionValid(i, turnCell.LocationX, turnCell.LocationY)) {
 				nextDirection = i;
 				bestProbability = turnCell.cornerProbabilities[i];
 			}
@@ -205,6 +224,9 @@ public class ReinforcementLearner {
 		//If the invalid Direction count is 3, then we have hit a dead end, and we can return the selected direction. 
 		if (invalidDirectionCount == 3) {
 			//Update the previous turn cell so that it cant take this direction. 
+			if (previousDirection == 0 || previousDirection == 1) {invalidDirection = (int)(previousDirection + 2);}
+			if (previousDirection == 2 || previousDirection == 3) {invalidDirection = (int)(previousDirection - 2);}
+			result = invalidDirection;
 			this.updatePreviousTurnCell(this.PrevTurnFloorCellIndex, true);
 		} else {
 			//Find the best direction that is not the opposite of the previousdirection.
@@ -233,7 +255,7 @@ public class ReinforcementLearner {
 	 */
 	public bool shouldChangeDirection(int locationX, int locationY) {
 		bool result = false;
-		int cellCenter = GameConstants.MapHeightPixels / 2;
+		int cellCenter = GameConstants.TurningFloorCellHeightPixels / 2 + 1;
 		int modX = (locationX - cellCenter) % GameConstants.TurningFloorCellWidthPixels;
 		int modY = (locationY - cellCenter) % GameConstants.TurningFloorCellHeightPixels;
 		if (modX == 0 && modY == 0) {

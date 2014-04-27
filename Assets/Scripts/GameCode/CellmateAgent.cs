@@ -8,20 +8,24 @@ using System;
 public class CellmateAgent : GameAgent {
 
 	public CellmateAgent() {
-		this.LocationX = 3;
-		this.LocationY = 3;
+		this.LocationX = 4;
+		this.LocationY = 4;
 	}
 
 	public void updateLocation() {
 		int nextDirection = GameEngine.learner.UpdateLearner ();
 		if (nextDirection == GameConstants.Left) {
-			this.LocationX--;
-		} else if (nextDirection == GameConstants.Right) {
-			this.LocationX++;
-		} else if (nextDirection == GameConstants.Up) {
-			this.LocationY++;
-		} else {
 			this.LocationY--;
+			GameDebugger.PrintMessage("Turning Left.");
+		} else if (nextDirection == GameConstants.Right) {
+			this.LocationY++;
+			GameDebugger.PrintMessage("Turning Right.");
+		} else if (nextDirection == GameConstants.Up) {
+			this.LocationX--;
+			GameDebugger.PrintMessage("Turning Up.");
+		} else {
+			this.LocationX++;
+			GameDebugger.PrintMessage("Turning Down.");
 		}
 	}
 
