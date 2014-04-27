@@ -245,9 +245,9 @@ public static class GameEngine {
 		if (cellmate.Alive == 1) {
 			cellmate.updateLocation ();
 		} else {
-			if (cellmate.Respawned == 1) {
+			if (cellmate.Respawned == true) {
 				cellmate.Alive=1;
-				cellmate.Respawned = 0;
+				cellmate.Respawned = true;
 				//INitialize the location of the cellmate. 
 			}
 		}
