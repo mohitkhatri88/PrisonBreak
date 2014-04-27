@@ -241,8 +241,16 @@ public static class GameEngine {
 		// update guards knowledge
 		estimator.UpdateEstimator ();
 
-		// update cellmate knowledge
-		cellmate.updateLocation ();
+		// update cellmate knowledge'
+		if (cellmate.Alive == 1) {
+			cellmate.updateLocation ();
+		} else {
+			if (cellmate.Respawned == 1) {
+				cellmate.Alive=1;
+				cellmate.Respawned = 0;
+				//INitialize the location of the cellmate. 
+			}
+		}
 		//learner.UpdateLearner ();
 
 		// update game enviornment
@@ -424,6 +432,7 @@ public static class GameEngine {
 		// check if cellmate is caught
 		if (lowestCellmateDistanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			cellmate.Alive = 0;
+			RemainingCellmateLives -=1;
 		}
 	
 

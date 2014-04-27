@@ -120,7 +120,7 @@ public class ReinforcementLearner {
 		GameDebugger.PrintMessage ("this location to be checked for a valid cell :" + tempX + " " + tempY);
 		try {
 		//Check if this is indeed part of the hallway. 
-			if (GameMap.GameMapArray[tempX, tempY] != GameConstants.MapHallwayFloorcell  && GameMap.GameMapArray[tempX, tempY] != GameConstants.TurningFloorcell) {
+			if (GameMap.GameMapArray[tempX, tempY] != GameConstants.MapHallwayFloorcell  && GameMap.GameMapArray[tempX, tempY] != GameConstants.MapTurningFloorcell) {
 			result = false;
 			GameDebugger.PrintMessage("The previous direction is invalid.");
 		}
@@ -244,7 +244,7 @@ public class ReinforcementLearner {
 	 */
 	public bool isTurnCell(int locationX, int locationY) {
 		bool result = false;
-		if (GameMap.GameMapArray [locationX, locationY] == GameConstants.TurningFloorcell) {
+		if (GameMap.GameMapArray [locationX, locationY] == GameConstants.MapTurningFloorcell) {
 			result = true;
 		}
 		return result;

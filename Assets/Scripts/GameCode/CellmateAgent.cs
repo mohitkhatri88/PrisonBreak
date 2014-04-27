@@ -14,6 +14,7 @@ public class CellmateAgent : GameAgent {
 
 	public void updateLocation() {
 		int nextDirection = GameEngine.learner.UpdateLearner ();
+		//this.MovingDirection = nextDirection;
 		if (nextDirection == GameConstants.Left) {
 			this.LocationY--;
 			GameDebugger.PrintMessage("Turning Left.");
