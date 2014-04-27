@@ -1,4 +1,16 @@
 ﻿<Properties>
+<<<<<<< HEAD
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameCode/GameEngine.cs">
+    <Files>
+      <File FileName="Assets/Scripts/GameCode/ParticleFilteringEstimator.cs" Line="151" Column="11" />
+      <File FileName="Assets/Scripts/GameCode/GameEngine.cs" Line="262" Column="4" />
+      <File FileName="Assets/Scripts/GameCode/GameConstants.cs" Line="59" Column="40" />
+      <File FileName="Assets/Scripts/GameCode/GameDebugger.cs" Line="19" Column="72" />
+      <File FileName="Assets/Scripts/GameCode/Particle.cs" Line="24" Column="23" />
+      <File FileName="Assets/Scripts/UI Code/GUIManager.cs" Line="105" Column="40" />
+      <File FileName="Assets/Scripts/GameCode/Coin.cs" Line="14" Column="22" />
+=======
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameCode\ReinforcementLearner.cs">
     <Files>
@@ -8,6 +20,7 @@
       <File FileName="Assets\Scripts\GameCode\GameConstants.cs" Line="118" Column="1" />
       <File FileName="Assets\Scripts\GameCode\GameMap.cs" Line="49" Column="4" />
       <File FileName="Assets\Scripts\GameCode\TurningFloorCell.cs" Line="35" Column="30" />
+>>>>>>> f993ab390d52788a30d4180d703d5e19ff0cd9df
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

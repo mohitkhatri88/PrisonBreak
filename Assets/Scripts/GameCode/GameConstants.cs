@@ -32,10 +32,10 @@ public class GameConstants {
 	public const int RatAgentId = 7;
 
 	/* Distance that guard can move from their current location */
-	public const int GuardSearchDistancePixels = 25;
+	public const int GuardSearchDistancePixels = 50;
 
 	/* Distance that guard can catch PlayerAgent */
-	public const int PlayerCaughtDistancePixels = 1;
+	public const int PlayerCaughtDistancePixels = 5;
 
 	/* Number of pixels on 3D map for every one pixel in 2D GameMap */
 	public const int MapScalePixels = 10;
@@ -56,10 +56,10 @@ public class GameConstants {
 	public const int TurningFloorCellHeightPixels = 7;
 
 	/* Initial number of time stemps for particle to live */
-	public const int ParticleLifeSpan = 100;
+	public const int ParticleLifeSpan = 50;
 
 	/* Particle value when RatAgent steps on floor sensor */
-	public const int RatAgentParticleValue = 25;
+	public const int RatAgentParticleValue = 5;
 
 	/* IParticle value when PlayerAgent steps on floor sensor */
 	public const int PlayerAgentParticleValue = 50;
@@ -77,7 +77,7 @@ public class GameConstants {
 	public const int MapEntranceFloorcell = 3;
 
 	/* Turning cell value from Map Array */
-	public const int TurningFloorcell = 4;
+	public const int MapTurningFloorcell = 4;
 
 	/* Cell Space value from Map Array */
 	public const int MapPrisonFloorcell = 5;

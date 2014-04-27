@@ -47,7 +47,10 @@ public static class GameEngine {
 	// AI
 	public static ParticleFilteringEstimator estimator = new ParticleFilteringEstimator();
 	public static ReinforcementLearner learner = new ReinforcementLearner();
-		
+
+
+	public static bool WasPlayerPrevOnFloorSensor = false;
+
 
 	public static void InitGame() {
 		// start timer
@@ -113,10 +116,10 @@ public static class GameEngine {
 				playerPositionFound = true;
 			}
 
-			up[1] = (up[1]+(int)1);
-			down[1] = (down[1]-(int)1);
-			right[1] = (right[0]+(int)1);
-			left[1] = (left[0]-(int)1);
+			up[1] = (up[1]-1);
+			down[1] = (down[1]+1);
+			right[1] = (right[0]+1);
+			left[1] = (left[0]-1);
 		}
 
 		// set player alive and id
@@ -163,6 +166,21 @@ public static class GameEngine {
 				}
 			}
 
+			System.Random random2 = new System.Random();
+			switch(random2.Next(0, 4)) {
+			case 0:
+				guard.MovingDirection = GameConstants.Up;
+				break;
+			case 1:
+				guard.MovingDirection = GameConstants.Down;
+				break;
+			case 2:
+				guard.MovingDirection = GameConstants.Left;
+				break;
+			case 3:
+				guard.MovingDirection = GameConstants.Right;
+				break;
+			}
 			guards.Add(guard);
 		}
 
@@ -248,82 +266,126 @@ public static class GameEngine {
 		for (int i = 0; i<guards.Count; i++) {
 			int[] newLocation = estimator.GetGuardTargetLocation(guards[i]);
 
-			int newX = newLocation[0];
-			int newY = newLocation[1];
-			int oldX = guards[i].LocationX;
-			int oldY = guards[i].LocationY;
+			if (newLocation[0] != -1 && newLocation[1] != -1) {
+				int newX = newLocation[0];
+				int newY = newLocation[1];
+				int oldX = guards[i].LocationX;
+				int oldY = guards[i].LocationY;
 
-			double distanceUp = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY+1-oldY)*(newY+1-oldY)));
-			double distanceDown = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-1-oldY)*(newY-1-oldY)));
-			double distanceLeft = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
-			double distanceRight = Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
-
-
-			bool canGoUp = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
-			bool canGoDown = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-1] == GameConstants.MapHallwayFloorcell;
-			bool canGoRight = GameMap.GameMapArray[guards[i].LocationX+1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
-			bool canGoLeft = GameMap.GameMapArray[guards[i].LocationX-1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
+				double distanceUp = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-1-oldY)*(newY-1-oldY)));
+				double distanceDown = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY+1-oldY)*(newY+1-oldY)));
+				double distanceLeft = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
+				double distanceRight = Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
 
 
-			bool locationSet = false;
-			if (distanceUp < distanceDown && distanceUp < distanceLeft && distanceUp < distanceRight) { // up
-				if (canGoUp) {
-					guards[i].LocationY += 1;
-					locationSet = true;
+				bool canGoUp = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-1] == GameConstants.MapHallwayFloorcell;
+				bool canGoDown = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+1] == GameConstants.MapHallwayFloorcell;
+				bool canGoRight = GameMap.GameMapArray[guards[i].LocationX+1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
+				bool canGoLeft = GameMap.GameMapArray[guards[i].LocationX-1,guards[i].LocationY] == GameConstants.MapHallwayFloorcell;
+
+
+				bool locationSet = false;
+				//if (newLocation[2]==0) {
+				if (false) {
+					if (distanceUp < distanceDown && distanceUp < distanceLeft && distanceUp < distanceRight) { // up
+						if (canGoUp) {
+							guards[i].LocationY -= 1;
+							locationSet = true;
+						} else {
+							distanceUp = (32000);
+						}
+
+					}
+					if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight) { // down
+						if (canGoDown) {
+							guards[i].LocationY += 1;
+							locationSet = true;
+						} else {
+							distanceDown = (32000);
+						}
+
+					}
+					if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight) { // left
+						if (canGoLeft) {
+							guards[i].LocationX -= 1;
+							locationSet = true;
+						} else {
+							distanceLeft = (32000);
+						}
+
+					}
+					if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft) { // right
+						if (canGoRight) {
+							guards[i].LocationX += 1;
+							locationSet = true;
+						} else {
+							distanceRight = (32000);
+						}
+
+					}
 				} else {
-					distanceUp = (32000);
+					System.Random random = new System.Random();
+					if (guards[i].MovingDirection == GameConstants.Up) {
+
+						if (canGoUp) {
+							guards[i].LocationY -= 1;
+						} else {
+							guards[i].MovingDirection = random.Next(0, 4);
+						}
+					}
+
+					if (guards[i].MovingDirection == GameConstants.Down) {
+						if (canGoDown) {
+							guards[i].LocationY += 1;
+						} else {
+							guards[i].MovingDirection = random.Next(0, 4);
+						}
+					}
+
+					if (guards[i].MovingDirection == GameConstants.Left) {
+						if (canGoLeft) {
+							guards[i].LocationX -= 1;
+						} else {
+							guards[i].MovingDirection = random.Next(0, 4);
+						}
+					}
+
+					if (guards[i].MovingDirection == GameConstants.Right) {
+						if (canGoRight) {
+							guards[i].LocationX += 1;
+						} else {
+							guards[i].MovingDirection = random.Next(0, 4);
+						}
+					}
+				}
+				
+				if (locationSet) {
+					ParticleFilteringEstimator.FloorCellProbabilities[guards[i].LocationX, guards[i].LocationY] = 0;
 				}
 
-			} else if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight) { // down
-				if (canGoDown) {
-					guards[i].LocationY -= 1;
-					locationSet = true;
-				} else {
-					distanceDown = (32000);
+
+				// lowest cellmate to guard distance
+				int gLocationX = guards[i].LocationX;
+				int gLocationY = guards[i].LocationY;
+				/*int cLocationX = cellmate.LocationX;
+				int cLocationY = cellmate.LocationY;
+				int cellmateToGuardDistance = Math.Sqrt (((gLocationX-cLocationX)*(gLocationX-cLocationX))+((gLocationY-cLocationY)*(gLocationY-cLocationY)));;
+				if (lowestCellmateDistanceToGuard > cellmateToGuardDistance) {
+					lowestCellmateDistanceToGuard = cellmateToGuardDistance;
+				}*/
+
+				// lowest player to guard sitance
+				int pLocationX = player.LocationX;
+				int pLocationY = player.LocationY;
+				double playerToGuardDistance = Math.Sqrt (((gLocationX-pLocationX)*(gLocationX-pLocationX))+((gLocationY-pLocationY)*(gLocationY-pLocationY)));;
+				if (lowestPlayeristanceToGuard > playerToGuardDistance) {
+					lowestPlayeristanceToGuard = playerToGuardDistance;
 				}
 
-			} else if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight) { // left
-				if (canGoLeft) {
-					guards[i].LocationX -= 1;
-					locationSet = true;
-				} else {
-					distanceLeft = (32000);
-				}
-
-			} else if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft) { // right
-				if (canGoRight) {
-					guards[i].LocationX += 1;
-					locationSet = true;
-				} else {
-					distanceRight = (32000);
-				}
 
 			}
 
-			if (locationSet) {
-				// nothing
-			}
 
-
-			// lowest cellmate to guard distance
-			int gLocationX = guards[i].LocationX;
-			int gLocationY = guards[i].LocationY;
-			/*int cLocationX = cellmate.LocationX;
-			int cLocationY = cellmate.LocationY;
-			int cellmateToGuardDistance = Math.Sqrt (((gLocationX-cLocationX)*(gLocationX-cLocationX))+((gLocationY-cLocationY)*(gLocationY-cLocationY)));;
-			if (lowestCellmateDistanceToGuard > cellmateToGuardDistance) {
-				lowestCellmateDistanceToGuard = cellmateToGuardDistance;
-			}*/
-
-			// lowest player to guard sitance
-			int pLocationX = player.LocationX;
-			int pLocationY = player.LocationY;
-			double playerToGuardDistance = Math.Sqrt (((gLocationX-pLocationX)*(gLocationX-pLocationX))+((gLocationY-pLocationY)*(gLocationY-pLocationY)));;
-			if (lowestPlayeristanceToGuard > playerToGuardDistance) {
-				lowestPlayeristanceToGuard = playerToGuardDistance;
-			}
-
-			// guard doesn't need direction and guards stay in same place if it doesn't find best direction
 		}
 
 
@@ -366,9 +428,15 @@ public static class GameEngine {
 	
 
 		// check if Player is on floor sensor
-		if (estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY)) {
-			Debug.Log ("asdasdasdasdasdasdasdasd");
+		if (estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY) && !WasPlayerPrevOnFloorSensor) {
+			Debug.Log ("At floor sensor");
 			estimator.CreateParticle(GameConstants.PlayerAgentId, player.LocationX, player.LocationY);
+			WasPlayerPrevOnFloorSensor = true;
+		}
+
+		if (!estimator.IsFloorSensorAtLocation(player.LocationX, player.LocationY) && WasPlayerPrevOnFloorSensor) {
+			WasPlayerPrevOnFloorSensor = false;
+			Debug.Log("Left floor sensor");
 		}
 
 		// check if Player collected a coin
@@ -383,6 +451,8 @@ public static class GameEngine {
 		// check if Player is caught by Guard
 		if (lowestPlayeristanceToGuard < GameConstants.PlayerCaughtDistancePixels) {
 			player.Alive = 0;
+			Debug.Log ("CAUGHT!!!!");
+
 			return false;
 		}
 
