@@ -80,7 +80,8 @@ public class ParticleFilteringEstimator {
 			}*/
 
 			// check if particle needs to die
-			if (p.TimeToLive < 1) {
+			if (p.TimeToLive < 1 || p.ParticleValue < 1) {
+				Particles[i].ParticleRemoved = true;
 				particlesToRemove.Add(Particles[i]);
 			}
 
@@ -88,16 +89,16 @@ public class ParticleFilteringEstimator {
 			else {
 
 
-				ulong hashUp = ParticleCoverHash(p, p.CurrentLocationX, (p.CurrentLocationY+1));
-				ulong hashDown = ParticleCoverHash(p, p.CurrentLocationX, (p.CurrentLocationY-1));
+				ulong hashUp = ParticleCoverHash(p, p.CurrentLocationX, (p.CurrentLocationY-1));
+				ulong hashDown = ParticleCoverHash(p, p.CurrentLocationX, (p.CurrentLocationY+1));
 				ulong hashLeft = ParticleCoverHash(p, (p.CurrentLocationX-1), p.CurrentLocationY);
 				ulong hashRight = ParticleCoverHash(p, (p.CurrentLocationX+1), p.CurrentLocationY);
 
-				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY+1)] == GameConstants.MapHallwayFloorcell
-					|| GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY+1)] == GameConstants.MapTurningFloorcell;
-				
-				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY-1)] == GameConstants.MapHallwayFloorcell
+				bool canMoveUpOnMap = GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY-1)] == GameConstants.MapHallwayFloorcell
 					|| GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY-1)] == GameConstants.MapTurningFloorcell;
+				
+				bool canMoveDownOnMap = GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY+1)] == GameConstants.MapHallwayFloorcell
+					|| GameMap.GameMapArray[p.CurrentLocationX,(p.CurrentLocationY+1)] == GameConstants.MapTurningFloorcell;
 				
 				bool canMoveLeftOnMap = GameMap.GameMapArray[(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.MapHallwayFloorcell
 					|| GameMap.GameMapArray[(p.CurrentLocationX-1),p.CurrentLocationY] == GameConstants.MapTurningFloorcell;
@@ -106,66 +107,56 @@ public class ParticleFilteringEstimator {
 					|| GameMap.GameMapArray[(p.CurrentLocationX+1),p.CurrentLocationY] == GameConstants.MapTurningFloorcell;
 
 
-				if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp)) {
-					Particle newParticleAgain = new Particle (GameConstants.Up, p.CurrentLocationX, (p.CurrentLocationY+1), p.ParticleValue, p.TimeToLive, false, p.UniqueId);
-					particlesToAdd.Add (newParticleAgain);
-					AddParticleToCoverHash(newParticleAgain,  newParticleAgain.CurrentLocationX, newParticleAgain.CurrentLocationY);
-				}
-
-				if (canMoveDownOnMap && !FloorcellPartcileCover.Contains(hashDown)) {
+				if (canMoveUpOnMap && !FloorcellPartcileCover.Contains(hashUp) && Particles.Count < 100) {
 					Particle newParticleAgain = new Particle (GameConstants.Up, p.CurrentLocationX, (p.CurrentLocationY-1), p.ParticleValue, p.TimeToLive, false, p.UniqueId);
 					particlesToAdd.Add (newParticleAgain);
 					AddParticleToCoverHash(newParticleAgain,  newParticleAgain.CurrentLocationX, newParticleAgain.CurrentLocationY);
 				}
 
-				if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft)) {
+				if (canMoveDownOnMap && !FloorcellPartcileCover.Contains(hashDown) && Particles.Count < 100) {
+					Particle newParticleAgain = new Particle (GameConstants.Up, p.CurrentLocationX, (p.CurrentLocationY+1), p.ParticleValue, p.TimeToLive, false, p.UniqueId);
+					particlesToAdd.Add (newParticleAgain);
+					AddParticleToCoverHash(newParticleAgain,  newParticleAgain.CurrentLocationX, newParticleAgain.CurrentLocationY);
+				}
+
+				if (canMoveLeftOnMap && !FloorcellPartcileCover.Contains(hashLeft) && Particles.Count < 100) {
 					Particle newParticleAgain = new Particle (GameConstants.Up, (p.CurrentLocationX-1), (p.CurrentLocationY), p.ParticleValue, p.TimeToLive, false, p.UniqueId);
 					particlesToAdd.Add (new Particle (GameConstants.Up, (p.CurrentLocationX-1), (p.CurrentLocationY), p.ParticleValue, p.TimeToLive, false, p.UniqueId));
 					AddParticleToCoverHash(newParticleAgain,  newParticleAgain.CurrentLocationX, newParticleAgain.CurrentLocationY);
 				}
 
-				if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight)) {
+				if (canMoveRightOnMap && !FloorcellPartcileCover.Contains(hashRight) && Particles.Count < 100) {
 					Particle newParticleAgain = new Particle (GameConstants.Up, (p.CurrentLocationX+1), (p.CurrentLocationY), p.ParticleValue, p.TimeToLive, false, p.UniqueId);
 					particlesToAdd.Add (newParticleAgain);
 					AddParticleToCoverHash(newParticleAgain,  newParticleAgain.CurrentLocationX, newParticleAgain.CurrentLocationY);
 				}
 			}
 
-
-			KillParticle(Particles[i]);
 			Particles[i].ParticleRemoved = true;
 			particlesToRemove.Add(Particles[i]);
 		}
 
+
+		// remove killed particles
+		//var item = Particles.SingleOrDefault(x => x.ParticleRemoved == true);
+		//if (item != null) {
+		//	Particles.Remove (item);
+		//}
+
+		// remove killed particles
 		for (int u = 0; u<particlesToRemove.Count; u++) {
 			Particles.Remove(particlesToRemove[u]);
 		}
 
-
-
-		var item = Particles.SingleOrDefault(x => x.ParticleRemoved == true);
-		if (item != null) {
-			//Debug.Log("PARTICLE LIST STUFF REMOVED!");
-			Particles.Remove (item);
-		} else {
-			//Debug.Log("PARTICLE LIST IS NULL!");
-		}
-
-
-		for (int u = 0; u<particlesToRemove.Count; u++) {
-			Particles.Remove(particlesToRemove[u]);
-		}
-
-
+		// add new particles
 		for (int u = 0; u<particlesToAdd.Count; u++) {
 			Particles.Add(particlesToAdd[u]);
 			AddParticleToCoverHash (particlesToAdd[u], particlesToAdd[u].CurrentLocationX, particlesToAdd[u].CurrentLocationY);
 		}
 
-		Debug.Log ("Particle Count: "+ Particles.Count);
-		Debug.Log ("Particles Set Off: "+ NumberOfParticlesSetOff);
+		//Debug.Log ("Particle Count: "+ Particles.Count);
+		//Debug.Log ("Particles Set Off: "+ NumberOfParticlesSetOff);
 
-		//particlesToRemove.Clear ();
 		particlesToAdd.Clear ();
 		particlesToRemove.Clear ();
 	}
@@ -189,7 +180,7 @@ public class ParticleFilteringEstimator {
 	}
 
 	/*
-	 * Determines where PlayerAgent is most likely to be within range of Guard's limited sight.
+	 * Determines if floor sensor is at given location
 	 * 
 	 * locationX - x coordinate of where to check for floor sensor
 	 * locationY - y coordinate of where to check for floor sensor
@@ -223,35 +214,30 @@ public class ParticleFilteringEstimator {
 		Particles.Add (newParticle);
 		++NumberOfParticlesSetOff;
 
-
 		AddParticleToCoverHash (newParticle, newParticle.CurrentLocationX, newParticle.CurrentLocationY);
-		//Particles.Add (new Particle (GameConstants.Down, locationX, locationY, value, GameConstants.ParticleLifeSpan, true));
-		//Particles.Add (new Particle (GameConstants.Left, locationX, locationY, value, GameConstants.ParticleLifeSpan, true));
-		//Particles.Add (new Particle (GameConstants.Right, locationX, locationY, value, GameConstants.ParticleLifeSpan, true));	
-	
-		//int newFloorcellValue = (FloorCellProbabilities [locationX, locationY] + value);
-		//FloorCellProbabilities[locationX, locationY] = newFloorcellValue;
 	}
 
 	/*
 	 * Determines where PlayerAgent is most likely to be within range of Guard's limited sight.
 	 * 
-	 * Returns xy location value in int[0] = x, int[1] = y
+	 * Returns xy location value in int[0] = x, int[1] = y, int[2] = random or not
 	 */	
 	public int[] GetGuardTargetLocation(GuardAgent guard) {
+		int[] points = new int[3];
+
 		int startX = guard.LocationX-(GameConstants.GuardSearchDistancePixels/2);
 		int startY = guard.LocationY-(GameConstants.GuardSearchDistancePixels/2);
 		int endX = guard.LocationX+(GameConstants.GuardSearchDistancePixels/2);
 		int endY = guard.LocationY+(GameConstants.GuardSearchDistancePixels/2);
 
-		int highestParticleValue = -1;
+		int highestParticleValue = 0;
 		int xToSave = -1;
 		int yToSave = -1;
 
 		for (int x = startX; x<endX; x++) {
 			for (int y = startY; y<endY; y++) {
 				if (x>=0 && x<GameConstants.MapWidthPixels && y>=0 && y<GameConstants.MapHeightPixels){
-					if (FloorCellProbabilities[x,y] >= highestParticleValue) {
+					if (FloorCellProbabilities[x,y] > highestParticleValue) {
 						highestParticleValue = FloorCellProbabilities[x,y];
 						xToSave = x;
 						yToSave = y;
@@ -260,19 +246,35 @@ public class ParticleFilteringEstimator {
 			}			
 		}
 
-		int[] points = new int[2];
-		points[0] = xToSave;
-		points[1] = yToSave;
+		double distance = Math.Sqrt (Math.Pow(guard.LocationX-GameEngine.player.LocationX,2)+Math.Pow(guard.LocationY-GameEngine.player.LocationY,2));
+		double margin = GameConstants.PlayerCaughtDistancePixels * 4;
+		if (distance < margin) {
+			xToSave = GameEngine.player.LocationX;
+			yToSave = GameEngine.player.LocationY;
+		}
+
+
+		bool foundLoc = false;
+		System.Random random = new System.Random ();
+		if (!foundLoc && (xToSave == -1 || yToSave == -1)) {
+			int rx = random.Next (0, GameConstants.MapWidthPixels);
+			int ry = random.Next (0, GameConstants.MapHeightPixels);
+
+			if (GameMap.GameMapArray[rx,ry]==GameConstants.MapHallwayFloorcell) {
+				foundLoc = true;
+				points[0] = rx;
+				points[1] = ry;
+				points[2] = 1;
+			}
+		}
+
+		if (!foundLoc) {
+			points[0] = xToSave;
+			points[1] = yToSave;
+			points[2] = 0;
+		}
+
 		return points;
-	}
-
-
-	/*
-	 * Kills particle and removes hash cover value
-	 */	
-	public void KillParticle(Particle p){
-		//FloorcellPartcileCover.Remove (ParticleCoverHash(p, p.CurrentLocationX, p.CurrentLocationY));
-		//particlesToRemove.Add (p);
 	}
 
 	/*

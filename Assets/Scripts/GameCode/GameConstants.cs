@@ -32,7 +32,7 @@ public class GameConstants {
 	public const int RatAgentId = 7;
 
 	/* Distance that guard can move from their current location */
-	public const int GuardSearchDistancePixels = 25;
+	public const int GuardSearchDistancePixels = 50;
 
 	/* Distance that guard can catch PlayerAgent */
 	public const int PlayerCaughtDistancePixels = 5;
@@ -59,7 +59,7 @@ public class GameConstants {
 	public const int ParticleLifeSpan = 50;
 
 	/* Particle value when RatAgent steps on floor sensor */
-	public const int RatAgentParticleValue = 25;
+	public const int RatAgentParticleValue = 5;
 
 	/* IParticle value when PlayerAgent steps on floor sensor */
 	public const int PlayerAgentParticleValue = 50;
