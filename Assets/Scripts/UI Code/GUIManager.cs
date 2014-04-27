@@ -66,7 +66,7 @@ public class GUIManager : MonoBehaviour {
 		startTime = Time.time;
 
 		cellmateO = GameObject.Find("CellMate");
-		//cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
+		cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 	}
 	
 	void Update () {
@@ -79,7 +79,7 @@ public class GUIManager : MonoBehaviour {
 			GameEventManager.TriggerGameStart();
 		}
 		if(isGame){
-			if((endTime - startTime) > 0.01){
+			if((endTime - startTime) > 0.1){
 				GameEngine.RunGame();
 				//GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
 				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
@@ -92,6 +92,7 @@ public class GUIManager : MonoBehaviour {
 				}*/
 				startTime = Time.time;
 				//cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
+				cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
 			}
 		}
 	}
