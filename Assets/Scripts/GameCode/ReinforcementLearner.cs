@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,9 +19,6 @@ public class ReinforcementLearner {
 	/* Previous turn direction that Agent has taken */
 	public int PrevDirectionTaken { get; set; }
 
-	/* Ones represent floor cells Agent has walked on */
-	public byte[] CellmateExploredMap { get; set; }
-
 	/*A map sized turningfloor cell probabilities. */
 	//public TurningFloorCell[,] CellMap { get; set; }
 
@@ -35,7 +32,6 @@ public class ReinforcementLearner {
 	 */
 	public ReinforcementLearner () {
 		TurningFloorCellMap = new Dictionary<ulong, TurningFloorCell>();
-		CellmateExploredMap = new byte[GameConstants.SizeOfMapArrayPixels];
 		//CellMap = new TurningFloorCell[GameConstants.MapWidthPixels, GameConstants.MapHeightPixels];
 		epsilon = 0.9;
 		this.PrevDirectionTaken = GameConstants.Down;

@@ -126,13 +126,24 @@ public static class GameEngine {
 		player.AgentId = GameConstants.PlayerAgentId;
 		player.Alive = 1;
 
-		// set cellmate
-		/*cellmate.LocationX = player.LocationX;
-		cellmate.LocationY = player.LocationY;
+		/*
+		 * Cellmate initialization. 
+		 */
+		cellmate.LocationX = GameConstants.TurningFloorCellHeightPixels/2+1;
+		cellmate.LocationY = GameConstants.TurningFloorCellHeightPixels/2+1;
 		cellmate.AgentId = GameConstants.CellmateAgentId;
 		cellmate.Alive = 1;
-		cellmate.MovingDirection = random.Next (0,4);
-*/
+		cellmate.Respawned = false;
+		cellmate.MovingDirection = GameConstants.Down;
+		cellmate.distanceFromNewCell = GameConstants.TurningFloorCellHeightPixels/2+1;
+
+		//Marking the first cell as explored. 
+		for (int i=(cellmate.LocationY-GameConstants.TurningFloorCellWidthPixels);i<cellmate.LocationY+GameConstants.TurningFloorCellWidthPixels;i++) {
+			for (int j=(cellmate.LocationX-GameConstants.TurningFloorCellHeightPixels);j<cellmate.LocationX+GameConstants.TurningFloorCellHeightPixels;j++) {
+				cellmate.CellmateExploredMap[i,j] = 1;
+			}
+		}
+
 		// set guards
 		for (int i = 0; i<NumberOfGuards_PCG; i++) {
 			GuardAgent guard = new GuardAgent();
