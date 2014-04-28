@@ -132,17 +132,18 @@ public static class GameEngine {
 		cellmate.LocationX = GameConstants.TurningFloorCellHeightPixels/2+1;
 		cellmate.LocationY = GameConstants.TurningFloorCellHeightPixels/2+1;
 		cellmate.AgentId = GameConstants.CellmateAgentId;
-		cellmate.Alive = 1;
+		cellmate.Alive = 0;
 		cellmate.Respawned = false;
 		cellmate.MovingDirection = GameConstants.Down;
 		cellmate.distanceFromNewCell = GameConstants.TurningFloorCellHeightPixels/2+1;
+		RemainingCellmateLives = 5;
 
 		//Marking the first cell as explored. 
-		for (int i=(cellmate.LocationY-GameConstants.TurningFloorCellWidthPixels);i<cellmate.LocationY+GameConstants.TurningFloorCellWidthPixels;i++) {
+		/*for (int i=(cellmate.LocationY-GameConstants.TurningFloorCellWidthPixels);i<cellmate.LocationY+GameConstants.TurningFloorCellWidthPixels;i++) {
 			for (int j=(cellmate.LocationX-GameConstants.TurningFloorCellHeightPixels);j<cellmate.LocationX+GameConstants.TurningFloorCellHeightPixels;j++) {
 				cellmate.CellmateExploredMap[i,j] = 1;
 			}
-		}
+		}*/
 
 		// set guards
 		for (int i = 0; i<NumberOfGuards_PCG; i++) {
@@ -250,7 +251,7 @@ public static class GameEngine {
 
 	public static bool RunGame() {
 		// update guards knowledge
-		estimator.UpdateEstimator ();
+		//estimator.UpdateEstimator ();
 
 		// update cellmate knowledge'
 		if (cellmate.Alive == 1) {
@@ -258,14 +259,14 @@ public static class GameEngine {
 		} else {
 			if (cellmate.Respawned == true) {
 				cellmate.Alive=1;
-				cellmate.Respawned = true;
+				cellmate.Respawned = false;
 				//INitialize the location of the cellmate. 
 			}
 		}
 		//learner.UpdateLearner ();
 
 		// update game enviornment
-		bool result = UpdateGameEnvironment ();
+		//bool result = UpdateGameEnvironment ();
 
 		// return game over condition
 		//return result;

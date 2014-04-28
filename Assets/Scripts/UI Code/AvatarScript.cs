@@ -38,7 +38,7 @@ public class AvatarScript : MonoBehaviour {
 	CharacterController controller;
 	CollisionFlags collisionFlags;
 	bool isGrounded;
-	float previousX, previousY;
+	int previousX, previousY;
 
 	void Start (){
 		// must have both!
@@ -67,10 +67,13 @@ public class AvatarScript : MonoBehaviour {
 	
 	void GameStart() {
 		gameObject.SetActive(true);	
-		previousX = (float)GameEngine.player.LocationX;
-		previousY = (float)GameEngine.player.LocationY;
+		previousX = GameEngine.player.LocationX;
+		previousY = GameEngine.player.LocationY;
+		//Debug.Log (GameMap.GameMapArray(
+		//previousX = 50;
+		//previousY = 39;
 		//GameEngine.setPlayerPosition((GameEngine.guards[0].LocationX + 1), (GameEngine.guards[0].LocationY+1));
-		transform.position = ConvertLocation.ConvertToReal((int)previousX, transform.localPosition.y, (int)previousY);
+		transform.position = ConvertLocation.ConvertToReal(previousX, transform.localPosition.y, previousY);
 		transform.rotation = initialRotation;		
 		
 		collisionFlags = CollisionFlags.None;
@@ -82,6 +85,7 @@ public class AvatarScript : MonoBehaviour {
         verticalSpeed = 0f;
 
 		moveVector = Vector3.zero;
+		GameObject.Find("TextureMaking").GetComponent<ControlPlane>().makeRoute(previousX, previousY);
 	}
 	
 	void GameOver() {
@@ -91,7 +95,7 @@ public class AvatarScript : MonoBehaviour {
 	// Main update loop!
 	void Update() {
 
-				// change states if need be
+		// change states if need be
 		if (!isGrounded) {
 			// no rotation while jumping.  transform.Rotate(0f, inputRotate * rotateSpeed / 2f, 0f);
 	        Vector3 vec = new Vector3(0f, 0f, inputMove * moveSpeed);
@@ -126,9 +130,10 @@ public class AvatarScript : MonoBehaviour {
 			this.transform.Rotate(new Vector3(0,inputRotate*rotateSpeed*Time.deltaTime,0));
 			collisionFlags = controller.Move(moveVector+new Vector3(0,-gravity*Time.deltaTime,0));
 			Vector2 temp = ConvertLocation.ConvertTo2D(transform.localPosition);
-			if(previousX != temp.x || previousY != temp.y){
-				previousX = temp.x; previousY = temp.y;
-				GameEngine.setPlayerPosition((int)previousX, (int)previousY);
+			if(previousX != (int)temp.x || previousY != (int)temp.y){
+				previousX = (int)temp.x; previousY = (int)temp.y;
+				GameEngine.setPlayerPosition(previousX, previousY);
+				GameObject.Find("TextureMaking").GetComponent<ControlPlane>().makeRoute(previousX, previousY);
 			}
 		}
 		

@@ -14,7 +14,9 @@ public class GUIManager : MonoBehaviour {
 	private List<Coin> coinObjects = new List<Coin>();
 	private float startTime;
 	private float endTime;
-	GameObject cellmateO;
+	public static GameObject cellmateO;
+	public static GameObject camera;
+	public static GameObject textureMaking;
 	
 	void Start () {
 		// perhaps should check here to make sure only one?
@@ -38,7 +40,7 @@ public class GUIManager : MonoBehaviour {
 		isGame = false;
 
 		/* Making of Guards and intialize their position from Game Engine */
-		GameObject guardO = GameObject.Find ("Guard");
+		/*GameObject guardO = GameObject.Find ("Guard");
 		GameObject miniO = GameObject.Find ("MiniGuard");
 		for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 			GuardAgent tempG = GameEngine.guards[i];
@@ -61,12 +63,14 @@ public class GUIManager : MonoBehaviour {
 			ratObjects.Add (Rat);
 		}*/
 		/* Making of Cell Mate */
-
+		cellmateO = GameObject.Find("CellMate");
+		cellmateO.SetActive(false);
 		/* Making of Coins and intialize their position from Game Engine */
 		startTime = Time.time;
 
-		cellmateO = GameObject.Find("CellMate");
-		cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
+		camera = GameObject.Find ("Camera");
+		textureMaking = GameObject.Find ("TextureMaking");
+		textureMaking.GetComponent<ControlPlane>().makeStart();
 	}
 	
 	void Update () {
@@ -79,10 +83,18 @@ public class GUIManager : MonoBehaviour {
 			GameEventManager.TriggerGameStart();
 		}
 		if(isGame){
-			if((endTime - startTime) > 0.1){
+			if(GameEngine.cellmate.Alive == 0){
+				cellmateO.SetActive(false);
+				Debug.Log (GameEngine.RemainingCellmateLives);
+				if(GameEngine.RemainingCellmateLives > 0){
+					camera.GetComponent<CellMateButton>().show = true;
+					camera.GetComponent<CellMateButton>().enabled = true;
+				}
+			}
+			//if((endTime - startTime) > 0.1){
 				GameEngine.RunGame();
 				//GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
-				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
+				/*for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 					GuardAgent tempG = GameEngine.guards[i];
 					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX);
 				}
@@ -90,10 +102,16 @@ public class GUIManager : MonoBehaviour {
 					RatAgent tempR = GameEngine.rats[i];
 					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
 				}*/
-				startTime = Time.time;
-				//cellmateO.transform.localPosition = new Vector3(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
-				cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(GameEngine.cellmate.LocationX, cellmateO.transform.localPosition.y, GameEngine.cellmate.LocationY);
+			if(GameEngine.cellmate.Alive != 0){
+				camera.GetComponent<CellMateButton>().show = false;
+				camera.GetComponent<CellMateButton>().enabled = false;
+				//startTime = Time.time;
+				int x = GameEngine.cellmate.LocationX;
+				int y = GameEngine.cellmate.LocationY;
+				cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(x, cellmateO.transform.localPosition.y, y);
+				textureMaking.GetComponent<ControlPlane>().makeRoute(x, y);
 			}
+			//}
 		}
 	}
 	
@@ -114,8 +132,8 @@ public class GUIManager : MonoBehaviour {
 		for(int i = 0; i < 100 ; i++){
 			for(int j = 0; j < 100; j++){
 				if(tempMap[i,j] != 0 && tempMap[i,j] != 4 && tempMap[i,j] != 3 && tempMap[i,j] != 5){
-					GameObject cube = (GameObject)Instantiate(wallO, ConvertLocation.ConvertToReal(i, 25f, j), Quaternion.identity);
-					cube.transform.localScale = new Vector3(10, 50, 10);
+					GameObject cube = (GameObject)Instantiate(wallO, ConvertLocation.ConvertToReal(i, 155f, j), Quaternion.identity);
+					cube.transform.localScale = new Vector3(10, 310f, 10);
 				}else if(tempMap[i,j] == 3){
 					tempMap = checkJail(tempMap, i, j);
 				}
@@ -130,16 +148,22 @@ public class GUIManager : MonoBehaviour {
 				tempMap[i + k, j] = 0;
 			}
 			GameObject jailO = GameObject.Find("JailHorizontal");
+			GameObject jailWO = GameObject.Find ("JailWall");
 			GameObject jail = (GameObject)Instantiate(jailO, ConvertLocation.ConvertToReal(i, 25f, j), Quaternion.Euler(0, 90, 0));
-			jail.SetActive(true);
+			GameObject jailW = (GameObject)Instantiate(jailWO, ConvertLocation.ConvertToReal(i, 300f, j), Quaternion.Euler(0, 90, 0));
+			jailW.transform.localPosition -= new Vector3(0f, 0f, 30f);
+			//jail.SetActive(true);
 		}
 		if(tempMap[i, j + 1] == 3){
 			for(int k = 1 ; k < 6; k++){
 				tempMap[i, j + k] = 0;
 			}
 			GameObject jailO = GameObject.Find("JailHorizontal");
+			GameObject jailWO = GameObject.Find ("JailWall");
 			GameObject jail = (GameObject)Instantiate(jailO, ConvertLocation.ConvertToReal(i, 25f, j), Quaternion.identity);
-			jail.SetActive(true);
+			GameObject jailW = (GameObject)Instantiate(jailWO, ConvertLocation.ConvertToReal(i, 300f, j), Quaternion.identity);
+			jailW.transform.localPosition += new Vector3(30f, 0f, 0);
+			//jail.SetActive(true);
 		}
 
 		return tempMap;

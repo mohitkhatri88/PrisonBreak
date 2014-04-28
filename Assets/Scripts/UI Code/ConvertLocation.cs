@@ -11,10 +11,10 @@ public static class ConvertLocation {
 		tempX = position.x * 0.1f - 0.5f + 50f;
 		tempZ = 49f - (position.z * 0.1f - 0.5f);
 		if(tempX < 0){
-			cI = 0;
+			cJ = 0;
 		}
 		if(tempZ < 0){
-			cJ = 0;
+			cI = 0;
 		}
 		if(tempX > 0){
 			if(tempX * 10f % 10f > 5){
