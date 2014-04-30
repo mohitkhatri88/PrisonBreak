@@ -40,11 +40,11 @@ public class GUIManager : MonoBehaviour {
 		isGame = false;
 
 		/* Making of Guards and intialize their position from Game Engine */
-		/*GameObject guardO = GameObject.Find ("Guard");
+		GameObject guardO = GameObject.Find ("Guard");
 		GameObject miniO = GameObject.Find ("MiniGuard");
 		for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 			GuardAgent tempG = GameEngine.guards[i];
-			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX), Quaternion.identity);
+			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY), Quaternion.identity);
 			guardObjects.Add (Guard);
 			GameObject Mini = (GameObject) Instantiate (miniO,miniO.transform.localPosition, Quaternion.identity);
 			Mini.GetComponent<MiniMapGuard>().target = Guard;
@@ -91,17 +91,18 @@ public class GUIManager : MonoBehaviour {
 					camera.GetComponent<CellMateButton>().enabled = true;
 				}
 			}
-			//if((endTime - startTime) > 0.1){
+			if((endTime - startTime) > 0.1){
 				GameEngine.RunGame();
 				//GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
-				/*for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
+				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 					GuardAgent tempG = GameEngine.guards[i];
-					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX);
+					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY);
 				}
 				/*for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
 					RatAgent tempR = GameEngine.rats[i];
 					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
 				}*/
+			}
 			if(GameEngine.cellmate.Alive != 0){
 				camera.GetComponent<CellMateButton>().show = false;
 				camera.GetComponent<CellMateButton>().enabled = false;
