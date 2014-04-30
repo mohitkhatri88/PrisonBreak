@@ -6,7 +6,7 @@ using System.IO;
 /*
  * Represents 2D game map
  */
-[System.Serializable]
+//[System.Serializable]
 public static class GameMap {
 	/* Contains 2D floor cells with type values (0, 2, 3, ????) */
 	public static int[,] GameMapArray;

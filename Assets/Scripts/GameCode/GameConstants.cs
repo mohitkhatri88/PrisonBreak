@@ -114,4 +114,7 @@ public class GameConstants {
 
 	/*Y Location for the exit*/
 	public const int exitY = 54;
+
+	/*It is this rate at which the code explores.*/
+	public const double explorationRate = 0.7;
 }

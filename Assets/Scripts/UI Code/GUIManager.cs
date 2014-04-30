@@ -4,27 +4,32 @@ using System.Collections.Generic;
 
 public class GUIManager : MonoBehaviour {
 	
-	public GUIText gameOverText, instructionsText;
+	public GUIText gameOverText, instructionsText, playerWin;
 	
 	// this seems pretty dodgy, although I guess if you know there is just one ... ugh
 	private static GUIManager instance;
 	private bool isGame;
 	private List<GameObject> guardObjects = new List<GameObject>();
 	private List<GameObject> ratObjects = new List<GameObject>();
+	private List<GameObject> miniGuardObjects = new List<GameObject>();
 	private List<Coin> coinObjects = new List<Coin>();
 	private float startTime;
 	private float endTime;
 	public static GameObject cellmateO;
+	public static GameObject cellmateM;
 	public static GameObject camera;
 	public static GameObject textureMaking;
+	public static GameObject player;
+	private int[,] tempMap;
+	private bool result;
 	
 	void Start () {
 		// perhaps should check here to make sure only one?
 		/* Map Generation */
+		GameMap.CreateMap();
+		UIGameMap mapG = new UIGameMap();
+		tempMap = mapG.CreateMap();
 		generateMap ();
-
-		/* Init of the Game Engine */
-		GameEngine.InitGame();
 
 		/* Game Event Maneger activate*/
 		instance = this;
@@ -35,83 +40,65 @@ public class GUIManager : MonoBehaviour {
 		/* Text Of the Game*/ 
 		gameOverText.enabled = false;
 		instructionsText.enabled = true;
+		playerWin.enabled = false;
 
 		/* Check Game is on or not*/
 		isGame = false;
 
-		/* Making of Guards and intialize their position from Game Engine */
-		/*GameObject guardO = GameObject.Find ("Guard");
-		GameObject miniO = GameObject.Find ("MiniGuard");
-		for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
-			GuardAgent tempG = GameEngine.guards[i];
-			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX), Quaternion.identity);
-			guardObjects.Add (Guard);
-			GameObject Mini = (GameObject) Instantiate (miniO,miniO.transform.localPosition, Quaternion.identity);
-			Mini.GetComponent<MiniMapGuard>().target = Guard;
-		}
-		/*GameObject Guard = (GameObject) Instantiate (GameObject.Find ("Guard"), ConvertLocation.ConvertToReal(GameEngine.guards[0].LocationX, 4.58f, 
-		                                                                                                      GameEngine.guards[0].LocationY), Quaternion.identity);
-		guardObjects.Add (Guard);
-		GameObject Mini = (GameObject) Instantiate (GameObject.Find("MiniGuard"),GameObject.Find("MiniGuard").transform.localPosition, Quaternion.identity);
-		Mini.GetComponent<MiniMapGuard>().target = Guard;*/
-
-		/* Making of Rats and intialize their position from Game Engine */
-		/*GameObject ratO = GameObject.Find ("Rat");
-		for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
-			RatAgent tempR = GameEngine.rats[i];
-			GameObject Rat = (GameObject) Instantiate (ratO, ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY), Quaternion.identity);
-			ratObjects.Add (Rat);
-		}*/
-		/* Making of Cell Mate */
 		cellmateO = GameObject.Find("CellMate");
-		cellmateO.SetActive(false);
-		/* Making of Coins and intialize their position from Game Engine */
-		startTime = Time.time;
-
+		cellmateM = GameObject.Find ("MiniCell");
+		player = GameObject.Find("Character");
 		camera = GameObject.Find ("Camera");
 		textureMaking = GameObject.Find ("TextureMaking");
-		textureMaking.GetComponent<ControlPlane>().makeStart();
 	}
 	
 	void Update () {
 		endTime = Time.time;
 		if(Input.GetButtonDown("Jump") && !isGame){
-			gameOverText.enabled = false;
-			instructionsText.enabled = false;
-			StartCoroutine(FadeInstructions());
 			isGame = true;
 			GameEventManager.TriggerGameStart();
 		}
 		if(isGame){
 			if(GameEngine.cellmate.Alive == 0){
 				cellmateO.SetActive(false);
-				Debug.Log (GameEngine.RemainingCellmateLives);
+				cellmateM.SetActive(false);
+				//Debug.Log (GameEngine.RemainingCellmateLives);
 				if(GameEngine.RemainingCellmateLives > 0){
 					camera.GetComponent<CellMateButton>().show = true;
 					camera.GetComponent<CellMateButton>().enabled = true;
 				}
 			}
-			//if((endTime - startTime) > 0.1){
-				GameEngine.RunGame();
+			if((endTime - startTime) > 0.1){
+				result = GameEngine.RunGame();
+				if(result == false){
+					GameEventManager.TriggerGameOver();
+				}
 				//GameDebugger.PrintArray(0, "Particle Filtering check", ParticleFilteringEstimator.FloorCellProbabilities);
-				/*for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
+				for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
 					GuardAgent tempG = GameEngine.guards[i];
-					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationY, 4.58f, tempG.LocationX);
+					guardObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY);
 				}
 				/*for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
 					RatAgent tempR = GameEngine.rats[i];
 					ratObjects[i].transform.localPosition = ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY);
 				}*/
-			if(GameEngine.cellmate.Alive != 0){
-				camera.GetComponent<CellMateButton>().show = false;
-				camera.GetComponent<CellMateButton>().enabled = false;
-				//startTime = Time.time;
-				int x = GameEngine.cellmate.LocationX;
-				int y = GameEngine.cellmate.LocationY;
-				cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(x, cellmateO.transform.localPosition.y, y);
-				textureMaking.GetComponent<ControlPlane>().makeRoute(x, y);
+				if(GameEngine.cellmate.Alive != 0){
+					camera.GetComponent<CellMateButton>().show = false;
+					camera.GetComponent<CellMateButton>().enabled = false;
+					cellmateO.SetActive(true);
+					cellmateM.SetActive(true);
+					//startTime = Time.time;
+					int x = GameEngine.cellmate.LocationX;
+					int y = GameEngine.cellmate.LocationY;
+					cellmateO.transform.localPosition = ConvertLocation.ConvertToReal(x, cellmateO.transform.localPosition.y, y);
+					textureMaking.GetComponent<ControlPlane>().makeRoute(x, y);
+				}
+				startTime = Time.time;
 			}
-			//}
+
+			if(GameEngine.player.Alive == 0){
+				GameEventManager.TriggerGameOver();
+			}
 		}
 	}
 	
@@ -125,17 +112,21 @@ public class GUIManager : MonoBehaviour {
 		instructionsText.enabled = false;
 	}
 	private void generateMap(){
-		GameMap.CreateMap();
-		int[,] tempMap = GameMap.GameMapArray;
-
 		GameObject wallO = GameObject.Find("Wall");
 		for(int i = 0; i < 100 ; i++){
 			for(int j = 0; j < 100; j++){
-				if(tempMap[i,j] != 0 && tempMap[i,j] != 4 && tempMap[i,j] != 3 && tempMap[i,j] != 5){
+				if(tempMap[i,j] != 0 && tempMap[i,j] != 4 && tempMap[i,j] != 3 && tempMap[i,j] != 5 && tempMap[i,j] != 2){
 					GameObject cube = (GameObject)Instantiate(wallO, ConvertLocation.ConvertToReal(i, 155f, j), Quaternion.identity);
 					cube.transform.localScale = new Vector3(10, 310f, 10);
 				}else if(tempMap[i,j] == 3){
 					tempMap = checkJail(tempMap, i, j);
+				}else if(tempMap[i, j] == 2){
+					for(int k = 1; k < 7; k++){
+						tempMap[i, j + k] = 0;
+					}
+					GameObject exitO = GameObject.Find ("EXIT");
+					GameObject exit = (GameObject) Instantiate(exitO, ConvertLocation.ConvertToReal(i, 0f, j), Quaternion.Euler (0, 180, 0));
+					exit.transform.localPosition += new Vector3(30f, 0f, 0f);
 				}
 			}
 		}
@@ -169,13 +160,75 @@ public class GUIManager : MonoBehaviour {
 		return tempMap;
 	}
 	private void GameStart(){
+		Debug.Log ("GAME START CALL!!!!!");
+		result = true;
+		/* Init of the Game Engine */
+		GameEngine.InitGame();
+		gameOverText.enabled = false;
+		playerWin.enabled = false;
+		//instructionsText.enabled = false;
+		StartCoroutine(FadeInstructions());
+		/* Making of Guards and intialize their position from Game Engine */
+		GameObject guardO = GameObject.Find ("Guard");
+		GameObject miniO = GameObject.Find ("MiniGuard");
+		for(int i = 0 ; i < GameEngine.NumberOfGuards_PCG; i++){
+			GuardAgent tempG = GameEngine.guards[i];
+			GameObject Guard = (GameObject) Instantiate (guardO, ConvertLocation.ConvertToReal(tempG.LocationX, 4.58f, tempG.LocationY), Quaternion.identity);
+			guardObjects.Add (Guard);
+			GameObject Mini = (GameObject) Instantiate (miniO,miniO.transform.localPosition, Quaternion.identity);
+			Mini.GetComponent<MiniMapGuard>().target = Guard;
+			miniGuardObjects.Add (Mini);
+		}
+		
+		/* Making of Rats and intialize their position from Game Engine */
+		/*GameObject ratO = GameObject.Find ("Rat");
+		for(int i = 0; i < GameEngine.NumberOfRats_PCG; i++){
+			RatAgent tempR = GameEngine.rats[i];
+			GameObject Rat = (GameObject) Instantiate (ratO, ConvertLocation.ConvertToReal(tempR.LocationX, 0.25f, tempR.LocationY), Quaternion.identity);
+			ratObjects.Add (Rat);
+		}*/
+		/* Making of Cell Mate */
+		cellmateO.SetActive(false);
+		cellmateM.SetActive(false);
+
+		/* Making of Coins and intialize their position from Game Engine */
+
+		startTime = Time.time;
+		textureMaking.GetComponent<ControlPlane>().makeStart();
 	}
 
 	private void GameUpdate() {
 	}
 	private void GameOver () {
-		gameOverText.enabled = true;
-		instructionsText.enabled = true;
+		Debug.Log ("GAME OVER CALL!!!!!");
+		isGame = false;
+		GameEngine.player.Alive = 1;
+		if(result == true){
+			instructionsText.enabled = true;
+			gameOverText.enabled = true;
+			Debug.Log (guardObjects.Count);
+			int count = guardObjects.Count;
+			for(int i = 0 ; i < count; i++){
+				Destroy(guardObjects[i]);
+				Destroy(miniGuardObjects[i]);
+			}
+			while(guardObjects.Count!=0){
+				guardObjects.RemoveAt(0);
+				miniGuardObjects.RemoveAt(0);
+			}	
+		}else if(result == false){
+			playerWin.enabled = true;
+			instructionsText.enabled = true;
+			int count = guardObjects.Count;
+			for(int i = 0 ; i < count; i++){
+				Destroy(guardObjects[i]);
+				Destroy(miniGuardObjects[i]);
+			}
+			while(guardObjects.Count!=0){
+				guardObjects.RemoveAt(0);
+				miniGuardObjects.RemoveAt(0);
+			}	
+		}
 	}
 
 }

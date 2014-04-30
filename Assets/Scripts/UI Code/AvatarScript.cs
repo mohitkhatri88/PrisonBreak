@@ -91,6 +91,7 @@ public class AvatarScript : MonoBehaviour {
 	void GameOver() {
 		// won't be called
 		//gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 	// Main update loop!
 	void Update() {

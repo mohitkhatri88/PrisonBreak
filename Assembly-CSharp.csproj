@@ -69,9 +69,11 @@
      <Compile Include="Assets\Scripts\UI Code\GUIManager.cs" />
      <Compile Include="Assets\Scripts\UI Code\GameEventManager.cs" />
      <Compile Include="Assets\Scripts\UI Code\GuardScript.cs" />
+     <Compile Include="Assets\Scripts\UI Code\MiniMapCell.cs" />
      <Compile Include="Assets\Scripts\UI Code\MiniMapGuard.cs" />
      <Compile Include="Assets\Scripts\UI Code\MiniMapPlayer.cs" />
      <Compile Include="Assets\Scripts\UI Code\SpotlightPlayer.cs" />
+     <Compile Include="Assets\Scripts\UI Code\UIGameMap.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />

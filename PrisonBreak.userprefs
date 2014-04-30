@@ -1,11 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI Code\GUIManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameCode\GameEngine.cs">
     <Files>
-      <File FileName="Assets\Scripts\UI Code\CellMateButton.cs" Line="6" Column="9" />
-      <File FileName="Assets\Scripts\UI Code\GUIManager.cs" Line="82" Column="18" />
-      <File FileName="Assets\Scripts\GameCode\GameEngine.cs" Line="263" Column="31" />
-      <File FileName="Assets\Scripts\GameCode\CellmateAgent.cs" Line="56" Column="5" />
+      <File FileName="Assets\Scripts\GameCode\GameEngine.cs" Line="364" Column="6" />
+      <File FileName="Assets\Scripts\GameCode\GameEngine.cs" Line="364" Column="6" />
+      <File FileName="Assets\Scripts\UI Code\MiniMapGuard.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI Code\MiniMapCell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI Code\GUIManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GameCode\GameConstants.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
