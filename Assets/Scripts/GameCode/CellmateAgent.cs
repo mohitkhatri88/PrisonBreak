@@ -34,7 +34,7 @@ public class CellmateAgent : GameAgent {
 			this.LocationX++;
 			GameDebugger.PrintMessage("Turning Down.");
 		}
-
+		/*
 		//Check to see if we have entered the next cell. If so, update the explored map. 
 		if (--distanceFromNewCell == 0) {
 			distanceFromNewCell=GameConstants.TurningFloorCellHeightPixels;
@@ -56,7 +56,7 @@ public class CellmateAgent : GameAgent {
 					CellmateExploredMap[i,j] = 1;
 				}
 			}
-		} 
+		} */
 	}
 
 	/*
