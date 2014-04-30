@@ -53,6 +53,7 @@ public class ReinforcementLearner {
 		int currentX = GameEngine.cellmate.LocationX;
 		int currentY = GameEngine.cellmate.LocationY;
 		System.Random random = new System.Random();
+		double shouldExplore = random.NextDouble ();
 		GameDebugger.PrintMessage ("Current location : " + currentX + " " + currentY);
 		//Check to see if we should change direction. 
 		if (this.shouldChangeDirection(GameEngine.cellmate.LocationX, GameEngine.cellmate.LocationY)) {
@@ -70,8 +71,21 @@ public class ReinforcementLearner {
 				if(!this.TurningFloorCellMap.ContainsKey(index)) {
 					this.TurningFloorCellMap.Add(index, new TurningFloorCell(currentX, currentY));
 				}
-				//get the next direction that should be chosen. 
-				nextDirection = this.getBestDirectionTurnCell(TurningFloorCellMap[index]);
+				//get the next direction that should be chosen.
+				//Try and explore with a certain probability, else find a probability that is random so that we can explore. 
+				if (shouldExplore < GameConstants.explorationRate) {
+					//try and exploit so that you can finish the whole of the map. 
+					nextDirection = this.getBestDirectionTurnCell(TurningFloorCellMap[index]);
+				} else {
+					//Try and explore so that you can cover the whole of the map. 
+					int invalidDirection = 0;
+					//Find the best direction that is not the opposite of the previousdirection.
+					if (this.PrevDirectionTaken == 0 || this.PrevDirectionTaken == 1) {invalidDirection = (int)(this.PrevDirectionTaken + 2);}
+					if (this.PrevDirectionTaken == 2 || this.PrevDirectionTaken == 3) {invalidDirection = (int)(this.PrevDirectionTaken - 2);}
+					for (int i=0; i<4; i++) {
+						if (i!=invalidDirection && isDirectionValid(i, currentX, currentY)) {nextDirection = i;break;}
+					}
+				}
 				GameDebugger.PrintMessage("Direction chosen :" + nextDirection);
 				//Also, update the previous floor cell with the probabilities based on the current cell.
 				this.updatePreviousTurnCell(index, false);
@@ -175,8 +189,8 @@ public class ReinforcementLearner {
 	/*
 	 * Get the distance of the current location from the exit.
 	 */
-	public int distanceFromExit(int locationX, int locationY) {
-		return (int)Math.Sqrt(((locationX-GameConstants.exitX)*(locationX-GameConstants.exitX)) + ((locationY-GameConstants.exitY)*(locationY-GameConstants.exitY)));
+	public double distanceFromExit(int locationX, int locationY) {
+		return Math.Sqrt(((locationX-GameConstants.exitX)*(locationX-GameConstants.exitX)) + ((locationY-GameConstants.exitY)*(locationY-GameConstants.exitY)));
 	}
 
 	/*
