@@ -296,16 +296,24 @@ public static class GameEngine {
 		for (int i = 0; i<guards.Count; i++) {
 			int[] newLocation = estimator.GetGuardTargetLocation(guards[i]);
 			
-			if (newLocation[0] != -1 && newLocation[1] != -1) {
+		
 				int newX = newLocation[0];
 				int newY = newLocation[1];
 				int oldX = guards[i].LocationX;
 				int oldY = guards[i].LocationY;
 				
-				double distanceUp = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
+			bool[] directions = new bool[4];
+				double[] distances = new double[4];
+				distances[GameConstants.Up] = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
+				distances[GameConstants.Down] = Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
+				distances[GameConstants.Left] = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-oldY-1)*(newY-oldY-1)));
+				distances[GameConstants.Right] = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-oldY+1)*(newY-oldY+1)));
+
+				/*double distanceUp = Math.Sqrt (((newX-oldX-1)*(newX-oldX-1))+((newY-oldY)*(newY-oldY)));
 				double distanceDown = Math.Sqrt (((newX-oldX+1)*(newX-oldX+1))+((newY-oldY)*(newY-oldY)));
 				double distanceLeft = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-oldY-1)*(newY-oldY-1)));
 				double distanceRight = Math.Sqrt (((newX-oldX)*(newX-oldX))+((newY-oldY+1)*(newY-oldY+1)));
+				*/
 				
 				bool canGoUp = false;
 				bool canGoDown = false;
@@ -315,68 +323,134 @@ public static class GameEngine {
 				try {
 					canGoUp = GameMap.GameMapArray[guards[i].LocationX-4,guards[i].LocationY] == GameConstants.MapHallwayFloorcell
 						|| GameMap.GameMapArray[guards[i].LocationX-4,guards[i].LocationY] == GameConstants.MapTurningFloorcell;
+
+				//Debug.Log ("TRYING TO GO UP, VALUE: "+canGoUp);	
 				} catch (Exception e) {
-					
+					//Debug.Log ("ERROR TRYING TO GO UP");	
 				}
 				try {
 					canGoDown = GameMap.GameMapArray[guards[i].LocationX+4,guards[i].LocationY] == GameConstants.MapHallwayFloorcell
 						|| GameMap.GameMapArray[guards[i].LocationX+4,guards[i].LocationY] == GameConstants.MapTurningFloorcell;
-				} catch (Exception e) {
-					
+				//Debug.Log ("TRYING TO GO DOWN, VALUE: "+canGoDown);	
+			} catch (Exception e) {
+				//Debug.Log ("ERROR TRYING TO GO DOWN");	
 				}
 				
 				try {
 					canGoRight = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+4] == GameConstants.MapHallwayFloorcell
 						|| GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY+4] == GameConstants.MapTurningFloorcell;
-				} catch (Exception e) {
-					
+				//Debug.Log ("TRYING TO GO RIGHT, VALUE: "+canGoRight);	
+			} catch (Exception e) {
+				//Debug.Log ("ERROR TRYING TO GO RIGHT");	
 				}
 				try {
 					canGoLeft = GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-4] == GameConstants.MapHallwayFloorcell
 						|| GameMap.GameMapArray[guards[i].LocationX,guards[i].LocationY-4] == GameConstants.MapTurningFloorcell;
-				} catch (Exception e) {
-					
+				//Debug.Log ("TRYING TO GO LEFT, VALUE: "+canGoLeft);	
+			} catch (Exception e) {
+				//Debug.Log ("ERROR TRYING TO GO LEFT");	
 				} 
+
+			directions[GameConstants.Up] = canGoUp;
+			directions[GameConstants.Down] = canGoDown;
+			directions[GameConstants.Left] = canGoLeft;
+			directions[GameConstants.Right] = canGoRight;
+
+
+
+
 				
-				bool locationSet = false;
-				if (newLocation[2]==0) {
-					//if (true) {
-					if (distanceUp < distanceDown && distanceUp < distanceLeft && distanceUp < distanceRight) { // up
+		    bool locationSet = false;
+			//if (newLocation[2]==0) {
+			if (false) {
+
+
+				//Debug.Log ("Design up: "+distanceUp+", down: "+distanceDown+", left: "+distanceLeft+", right: "+distanceRight);
+
+				double bestDistance = 320000;
+				int bestDirection = 0;
+
+
+
+				for (int k = 0; k<4; k++) {
+					if (distances[k] <= bestDistance && directions[k] == true) {
+						bestDistance = distances[k];
+						bestDirection = k;
+					}
+				}
+
+
+				switch (bestDirection) {
+					case 3: // up 
+						guards[i].LocationX -= 1;
+						break;
+					case 1: // down
+						guards[i].LocationX += 1;
+						break;
+					case 0: // left
+						guards[i].LocationY -= 1;
+						break;
+					case 2: // right
+						guards[i].LocationY += 1;
+						break;
+				}
+
+				//Debug.Log("Best direction: "+bestDirection);
+
+
+
+
+				/*
+
+				if (distanceUp < distanceDown && distanceUp < distanceLeft && distanceUp < distanceRight && !locationSet) { // up
+
+					Debug.Log("IN UP");
 						if (canGoUp) {
 							guards[i].LocationX -= 1;
 							locationSet = true;
+							Debug.Log("up up up up HAS PLAYER MOVED?");
 						} else {
 							distanceUp = (32000);
 						}
 						
 					}
-					if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight) { // down
-						if (canGoDown) {
-							guards[i].LocationX += 1;
-							locationSet = true;
-						} else {
-							distanceDown = (32000);
+					if (distanceDown < distanceUp && distanceDown < distanceLeft && distanceDown < distanceRight && !locationSet) { // down
+					Debug.Log("IN DOWN");		
+					if (canGoDown) {
+								guards[i].LocationX += 1;
+								locationSet = true;
+								Debug.Log("down down down down HAS PLAYER MOVED?");
+							} else {
+								distanceDown = (32000);
+							}
+							
 						}
-						
-					}
-					if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight) { // left
-						if (canGoLeft) {
-							guards[i].LocationY -= 1;
-							locationSet = true;
-						} else {
-							distanceLeft = (32000);
+					if (distanceLeft < distanceUp && distanceLeft < distanceDown && distanceLeft < distanceRight && !locationSet) { // left
+					Debug.Log("IN LEFT");		
+					if (canGoLeft) {
+								guards[i].LocationY -= 1;
+								locationSet = true;
+								Debug.Log("left left left left HAS PLAYER MOVED?");
+							} else {
+								distanceLeft = (32000);
+							}
+							
 						}
-						
+					if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft && !locationSet) { // right
+					Debug.Log("IN RIGHT");		
+					if (canGoRight) {
+								guards[i].LocationY += 1;
+								locationSet = true;
+								Debug.Log("right right right right HAS PLAYER MOVED?");
+							} else {
+								distanceRight = (32000);
+							}
+							
 					}
-					if (distanceRight < distanceUp && distanceRight < distanceDown && distanceRight < distanceLeft) { // right
-						if (canGoRight) {
-							guards[i].LocationY += 1;
-							locationSet = true;
-						} else {
-							distanceRight = (32000);
-						}
-						
-					}
+
+				*/
+				
+
 				} else {
 					System.Random random = new System.Random();
 					if (guards[i].MovingDirection == GameConstants.Up) {
@@ -414,7 +488,7 @@ public static class GameEngine {
 				}
 				
 				if (locationSet) {
-					ParticleFilteringEstimator.FloorCellProbabilities[guards[i].LocationX, guards[i].LocationY] = 0;
+					//ParticleFilteringEstimator.FloorCellProbabilities[guards[i].LocationX, guards[i].LocationY] = 0;
 				}
 				
 				
@@ -437,7 +511,7 @@ public static class GameEngine {
 				}
 				
 				
-			}
+		
 			
 			
 		}

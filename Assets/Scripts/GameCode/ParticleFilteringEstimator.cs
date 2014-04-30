@@ -63,7 +63,7 @@ public class ParticleFilteringEstimator {
 			}
 		}
 		
-		Debug.Log ("Number of particles: "+ Particles.Count);
+		//Debug.Log ("Number of particles: "+ Particles.Count);
 		
 		// create and delete particles
 		ulong pCount = 0;
@@ -264,13 +264,17 @@ public class ParticleFilteringEstimator {
 				}
 			}			
 		}
-		
+
+		bool sentToGuard = false;
 		double distance = Math.Sqrt (Math.Pow(guard.LocationX-GameEngine.player.LocationX,2)+Math.Pow(guard.LocationY-GameEngine.player.LocationY,2));
 		double margin = GameConstants.PlayerCaughtDistancePixels * 4;
 		if (distance < margin) {
 			xToSave = GameEngine.player.LocationX;
 			yToSave = GameEngine.player.LocationY;
+			points[2] = 0;
+			sentToGuard = true;
 		}
+
 		
 		
 		/*bool foundLoc = false;
@@ -289,10 +293,12 @@ public class ParticleFilteringEstimator {
 		
 		if (xToSave == -1 || yToSave == -1) {
 			points[2] = 1;
-		} else {
+		} else if (!sentToGuard) {
 			points[2] = 0;
 			points[0] = xToSave;
 			points[1] = yToSave;
+
+			//Debug.Log ("P Value - x:"+xToSave+", y:"+yToSave);
 		}
 		
 		return points;

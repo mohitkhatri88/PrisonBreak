@@ -85,7 +85,7 @@ public class GUIManager : MonoBehaviour {
 		if(isGame){
 			if(GameEngine.cellmate.Alive == 0){
 				cellmateO.SetActive(false);
-				Debug.Log (GameEngine.RemainingCellmateLives);
+// TAKE				Debug.Log (GameEngine.RemainingCellmateLives);
 				if(GameEngine.RemainingCellmateLives > 0){
 					camera.GetComponent<CellMateButton>().show = true;
 					camera.GetComponent<CellMateButton>().enabled = true;
